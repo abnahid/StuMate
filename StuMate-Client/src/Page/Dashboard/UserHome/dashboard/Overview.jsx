@@ -2,17 +2,17 @@
 import { format, isThisWeek, isToday, parseISO } from 'date-fns';
 import { BookOpenCheck, Calendar, ClipboardCheck, Timer, Wallet } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useBudget } from '../../../../hooks/use-budget';
-import { useExamPrep } from '../../../../hooks/use-exam-prep';
-import { useFocus } from '../../../../hooks/use-focus';
-import { usePlanner } from '../../../../hooks/use-planner';
-import { useSchedule } from '../../../../hooks/use-schedule';
+import { Badge } from '../../../../components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../../components/ui/card';
+import { Skeleton } from '../../../../components/ui/skeleton';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../../components/ui/table';
+import { useBudget } from '../../../../hooks/useBudget';
+import { useExamPrep } from '../../../../hooks/useExamPrep';
+import { useFocus } from '../../../../hooks/useFocus';
+import { usePlanner } from '../../../../hooks/usePlanner';
+import { useSchedule } from '../../../../hooks/useSchedule';
 import { cn } from '../../../../lib/utils';
-import { Badge } from '../ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
-import { Skeleton } from '../ui/skeleton';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
-import { StatCard } from './stat-card';
+import { StatCard } from './StatCard';
 
 const priorityVariant = {
     low: 'secondary',

@@ -3,11 +3,11 @@
 import { isToday } from 'date-fns';
 import { Award, Clock, Pause, Play, RotateCcw, Target } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import { Progress } from '../../../../../ui/progress';
 import { Button } from '../../../../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../../components/ui/card';
+import { Progress } from '../../../../components/ui/progress';
 import { Tabs, TabsList, TabsTrigger } from '../../../../components/ui/tabs';
-import { useFocus } from '../../../../hooks/use-focus';
+import { useFocus } from '../../../../hooks/useFocus';
 import { StatCard } from '../dashboard/StatCard';
 
 const SESSION_DURATIONS = {

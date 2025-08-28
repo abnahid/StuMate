@@ -25,8 +25,8 @@ import {
 } from '../../../../components/ui/table';
 import { useBudget } from '../../../../hooks/useBudget';
 import { cn } from '../../../../lib/utils';
-import { BudgetChart } from './budget-chart';
-import { TransactionForm } from './transaction-form';
+import { BudgetChart } from './BudgetChart';
+import { TransactionForm } from './TransactionForm';
 
 export function BudgetTracker() {
     const { transactions, deleteTransaction } = useBudget();
