@@ -1,8 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { HoverCard } from "@/components/ui/hover-card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
 import { useContext, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { FaCheck, FaGoogle, FaTimes } from "react-icons/fa";
@@ -10,9 +5,13 @@ import { IoMdInformationCircleOutline } from "react-icons/io";
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { cn } from "../lib/utils";
 import { AuthContext } from "./../context/AuthProvider";
 import useAxiosPublic from "./../hooks/useAxiosPublic";
-import { HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
+import { Button } from "./ui/button";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 
 export function RegisterForm({ className, ...props }) {
   const [error, setError] = useState({});

@@ -4,7 +4,7 @@ import Lottie from "lottie-react";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import LogoLogin from "../assets/logo.svg";
-import LottieLogin from "../assets/lottie/loginPage.json";
+import LottieLogin from "../assets/lottie/login-page.json";
 
 export default function LoginPage() {
   const { isDarkMode } = useContext(ThemeContext);
@@ -33,8 +33,8 @@ export default function LoginPage() {
         <Lottie
           animationData={LottieLogin}
           loop={true}
-          className={`absolute inset-0 h-full w-full object-cover ${isDarkMode ? "brightness-[0.2] grayscale" : ""
-            }`}
+          className={`absolute inset-0 m-auto h-[70%] w-[70%] object-contain 
+    ${isDarkMode ? "brightness-[0.2] grayscale" : ""}`}
         />
       </div>
     </div>

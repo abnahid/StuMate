@@ -9,7 +9,7 @@ import {
 import { useContext, useEffect, useRef, useState } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { Link, Outlet } from "react-router-dom";
-import AppSidebar from "../components/app-sidebar";
+import { AppSidebar } from "../components/app-sidebar";
 import { AuthContext } from "../context/AuthProvider";
 import ThemeContext from "../context/ThemeContext";
 

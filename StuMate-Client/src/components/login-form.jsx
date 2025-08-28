@@ -1,21 +1,16 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
-import { useContext, useEffect, useState } from "react";
+/* eslint-disable no-unused-vars */
+import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import {
-  LoadCanvasTemplate,
-  loadCaptchaEnginge,
-  validateCaptcha,
-} from "react-simple-captcha";
 import { AuthContext } from "../context/AuthProvider";
+import { cn } from "../lib/utils";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 
 export function LoginForm({ className, ...props }) {
   const { loginUser, setUser, googleLogin } = useContext(AuthContext);
   const [type, setType] = useState("password");
-  const [disabled, setDisabled] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -31,12 +26,6 @@ export function LoginForm({ className, ...props }) {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-    const userCaptchaValue = e.target.captcha?.value;
-
-    if (!validateCaptcha(userCaptchaValue)) {
-      toast.error("Invalid captcha. Please try again.");
-      return;
-    }
 
     loginUser(email, password)
       .then((userCredential) => {
@@ -65,19 +54,6 @@ export function LoginForm({ className, ...props }) {
       .catch((error) => {
         toast.error(`Error: ${error.message}`);
       });
-  };
-
-  useEffect(() => {
-    loadCaptchaEnginge(6);
-  }, []);
-
-  const handleValidateCaptcha = (e) => {
-    const user_captcha_value = e.target.value;
-    if (validateCaptcha(user_captcha_value)) {
-      setDisabled(false);
-    } else {
-      setDisabled(true);
-    }
   };
 
   const togglePasswordVisibility = () => {
@@ -112,21 +88,9 @@ export function LoginForm({ className, ...props }) {
               {type === "password" ? "Show" : "Hide"} Password
             </button>
           </div>
-
           <Input id="password" type={type} name="password" required />
         </div>
-        <div className="grid gap-2">
-          <label className="label">
-            <LoadCanvasTemplate />
-          </label>
-          <Input
-            onBlur={handleValidateCaptcha}
-            type="text"
-            name="captcha"
-            placeholder="type the captcha above"
-          />
-        </div>
-        <Button type="submit" className="w-full" disabled={disabled}>
+        <Button type="submit" className="w-full">
           Login
         </Button>
         <Button type="button" variant="outline" className="w-full" onClick={handleGuestLogin}>
