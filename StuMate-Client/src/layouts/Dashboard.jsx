@@ -64,12 +64,13 @@ const Dashboard = () => {
       {/* Main Content */}
       <div className="flex-1">
 
-        <div className=" lg:ml-64">
+        <div className="lg:ml-64">
           <header
             className={`sticky top-0 z-30 ${isDarkMode ? "bg-gray-800/90" : "bg-white/90"
               } backdrop-blur-md shadow-sm border-b ${isDarkMode ? "border-gray-700" : "border-gray-200"
               }`}
           >
+
             <div className="container mx-auto px-4 py-3">
               <div className="flex items-center justify-between">
                 {/* Left Side: Menu Toggle & Page Title */}

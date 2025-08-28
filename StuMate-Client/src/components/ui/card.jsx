@@ -1,5 +1,6 @@
+import * as React from "react"
 
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils"
 
 function Card({
   className,
@@ -90,6 +91,11 @@ function CardFooter({
 }
 
 export {
-  Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle
-};
-
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardAction,
+  CardDescription,
+  CardContent,
+}
