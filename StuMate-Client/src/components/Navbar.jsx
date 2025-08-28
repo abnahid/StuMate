@@ -7,7 +7,6 @@ import { FaMoon, FaSun } from "react-icons/fa";
 import { Link, NavLink } from "react-router-dom";
 import logoImg from "../assets/logo.svg";
 import { AuthContext } from "../context/AuthProvider";
-import useAdmin from "./../hooks/useAdmin";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,7 +19,6 @@ const defaultProfilePicture = "/avatars/default-user.png";
 
 const Navbar = () => {
   const { user, signOutUser } = useContext(AuthContext);
-  const [isAdmin] = useAdmin();
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const activeStyle = `font-semibold ${isDarkMode ? "text-BgPrimary" : "text-BgPrimary"}`;
 
@@ -127,30 +125,17 @@ const Navbar = () => {
           </li>
         </>
       )}
-      {user && isAdmin && (
-        <li>
-          <NavLink
-            to="/dashboard/adminHome"
-            className={({ isActive }) =>
-              isActive
-                ? `${activeStyle} hover:text-gray-700 px-3 py-1 rounded-lg`
-                : "hover:text-gray-700 px-3 py-1 rounded-lg"
-            }
-          >
-            Admin
-          </NavLink>
-        </li>
-      )}
+
     </>
   );
 
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled
-          ? isDarkMode
-            ? "bg-gray-900 shadow-lg"
-            : "bg-white shadow-lg"
-          : "bg-transparent"
+        ? isDarkMode
+          ? "bg-gray-900 shadow-lg"
+          : "bg-white shadow-lg"
+        : "bg-transparent"
         }`}
     >
       <div className="max-w-screen-xl mx-auto flex items-center justify-between px-4 py-3">
@@ -187,8 +172,8 @@ const Navbar = () => {
         <div className="flex items-center space-x-4">
           <button
             className={`p-2 lg:p-2 rounded-full transition-all duration-300 relative overflow-hidden ${isDarkMode
-                ? "bg-BgDarkPrimary text-BgDarkAccent hover:bg-BgDarkSecondary/70"
-                : "bg-red-100/50 text-red-700 hover:bg-red-200/70"
+              ? "bg-BgDarkPrimary text-BgDarkAccent hover:bg-BgDarkSecondary/70"
+              : "bg-red-100/50 text-red-700 hover:bg-red-200/70"
               } hover:scale-110`}
             onClick={toggleTheme}
             aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}

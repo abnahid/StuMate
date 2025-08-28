@@ -1,4 +1,3 @@
-import AdminRoute from "@/context/AdminRoute";
 import PrivateRoute from "@/context/PrivateRoute";
 
 import ContactPage from "@/Page/ContactPage";
@@ -17,18 +16,16 @@ import NotificationSettings from "@/Page/Dashboard/Settings/NotificationSettings
 import PasswordSettings from "@/Page/Dashboard/Settings/PasswordSettings";
 import ProfileSettings from "@/Page/Dashboard/Settings/ProfileSettings";
 import SettingsLayout from "@/Page/Dashboard/Settings/SettingsLayout";
-import MyBudget from "@/Page/Dashboard/UserHome/MyBudget";
-import MyClasses from "@/Page/Dashboard/UserHome/MyClasses";
-import MyPlans from "@/Page/Dashboard/UserHome/MyPlans";
-import UserHome from "@/Page/Dashboard/UserHome/UserHome";
 
 // Admin Dashboard Pages
 import AboutPage from "@/Page/About/AboutPage";
-import AdminHome from "@/Page/Dashboard/AdminHome/AdminHome";
-import ManageUsers from "@/Page/Dashboard/AdminHome/ManageUsers";
-import Reports from "@/Page/Dashboard/AdminHome/Reports";
 
 import { createBrowserRouter } from "react-router-dom";
+import { BudgetTracker } from "../Page/Dashboard/UserHome/budget/BudgetTracker";
+import { Overview } from "../Page/Dashboard/UserHome/dashboard/Overview";
+import { FocusTimer } from "../Page/Dashboard/UserHome/focus/FocusTimer";
+import { PlannerBoard } from "../Page/Dashboard/UserHome/planner/PlannerBoard";
+import { ScheduleView } from "../Page/Dashboard/UserHome/schedule/ScheduleView";
 
 const router = createBrowserRouter([
     {
@@ -54,12 +51,13 @@ const router = createBrowserRouter([
         ),
         errorElement: <ErrorPage />,
         children: [
-            { path: "userHome", element: <UserHome /> },
+            { path: "userHome", element: <Overview /> },
 
             // Student Routes
-            { path: "my-classes", element: <MyClasses /> },
-            { path: "my-budget", element: <MyBudget /> },
-            { path: "my-plans", element: <MyPlans /> },
+            { path: "schedule", element: <ScheduleView /> },
+            { path: "budget", element: <BudgetTracker /> },
+            { path: "planner", element: <PlannerBoard /> },
+            { path: "focus", element: <FocusTimer /> },
 
             // Settings (for both user/admin)
             {
@@ -73,31 +71,7 @@ const router = createBrowserRouter([
                 ],
             },
 
-            // Admin Routes
-            {
-                path: "adminHome",
-                element: (
-                    <AdminRoute>
-                        <AdminHome />
-                    </AdminRoute>
-                ),
-            },
-            {
-                path: "manage-users",
-                element: (
-                    <AdminRoute>
-                        <ManageUsers />
-                    </AdminRoute>
-                ),
-            },
-            {
-                path: "reports",
-                element: (
-                    <AdminRoute>
-                        <Reports />
-                    </AdminRoute>
-                ),
-            },
+
         ],
 
         future: {

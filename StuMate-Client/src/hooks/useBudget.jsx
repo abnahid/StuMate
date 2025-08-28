@@ -18,10 +18,8 @@ export function useBudget() {
     const addTransaction = async (newTransaction) => {
         try {
             const transactionWithEmail = { ...newTransaction, email: userEmail };
-            const response = await axiosPublic.post('/transactions', transactionWithEmail);
-            const createdTransaction = response.data;
-            mutate(endpoint, [...(transactions || []), createdTransaction], false);
-            return createdTransaction;
+            await axiosPublic.post('/transactions', transactionWithEmail);
+            mutate(endpoint);
         } catch (error) {
             console.error('Failed to add transaction:', error);
             mutate(endpoint);
@@ -31,7 +29,7 @@ export function useBudget() {
     const updateTransaction = async (updatedTransaction) => {
         try {
             await axiosPublic.put(`/transactions/${updatedTransaction._id}`, updatedTransaction);
-            mutate(endpoint, transactions?.map((t) => (t._id === updatedTransaction._id ? updatedTransaction : t)), false);
+            mutate(endpoint);
         } catch (error) {
             console.error('Failed to update transaction:', error);
             mutate(endpoint);
@@ -41,7 +39,7 @@ export function useBudget() {
     const deleteTransaction = async (id) => {
         try {
             await axiosPublic.delete(`/transactions/${id}`);
-            mutate(endpoint, transactions?.filter((t) => t._id !== id), false);
+            mutate(endpoint);
         } catch (error) {
             console.error('Failed to delete transaction:', error);
             mutate(endpoint);
