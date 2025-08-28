@@ -3,19 +3,15 @@
 import {
   IconBook2,
   IconCalendar,
-  IconChartBar,
+  IconClock,
   IconCurrencyDollar,
   IconDashboard,
   IconHelp,
   IconReport,
-  IconSearch,
-  IconSettings,
-  IconUser,
-  IconUsers,
+  IconSettings
 } from "@tabler/icons-react";
 
-import { Link } from "react-router-dom";
-import { NavDocuments } from "./nav-documents";
+import { Link, useLocation } from "react-router-dom";
 import { NavMain } from "./nav-main";
 import { NavSecondary } from "./nav-secondary";
 import { NavUser } from "./nav-user";
@@ -30,7 +26,7 @@ import {
   SidebarProvider,
 } from "./ui/sidebar";
 
-// 🎓 Sidebar Data (Student Project)
+// 🎓 Sidebar Data (Student Project) - Updated
 const data = {
   user: {
     name: "John Doe",
@@ -44,41 +40,29 @@ const data = {
       icon: IconDashboard,
     },
     {
-      title: "My Classes",
-      url: "/dashboard/classes",
-      icon: IconBook2,
-    },
-    {
-      title: "Analytics",
-      url: "/dashboard/analytics",
-      icon: IconChartBar,
-    },
-    {
       title: "Schedule",
       url: "/dashboard/schedule",
       icon: IconCalendar,
     },
     {
-      title: "Classmates",
-      url: "/dashboard/students",
-      icon: IconUsers,
-    },
-  ],
-  documents: [
-    {
-      name: "Budget Overview",
+      title: "Budget",
       url: "/dashboard/budget",
       icon: IconCurrencyDollar,
     },
     {
-      name: "Reports",
-      url: "/dashboard/reports",
+      title: "Study Planner",
+      url: "/dashboard/planner",
+      icon: IconBook2,
+    },
+    {
+      title: "Exam Prep",
+      url: "/dashboard/exam-prep",
       icon: IconReport,
     },
     {
-      name: "Profile",
-      url: "/dashboard/profile",
-      icon: IconUser,
+      title: "Focus Mode",
+      url: "/dashboard/focus",
+      icon: IconClock,
     },
   ],
   navSecondary: [
@@ -92,15 +76,18 @@ const data = {
       url: "/help",
       icon: IconHelp,
     },
-    {
-      title: "Search",
-      url: "/search",
-      icon: IconSearch,
-    },
   ],
 }
 
+// ✨ Updated: UI Button state for active navigation
 export function AppSidebar({ ...props }) {
+  const location = useLocation();
+
+  const isActive = (url) => {
+    // Consider exact match or partial for subroutes
+    return location.pathname === url || location.pathname.startsWith(url + "/");
+  };
+
   return (
     <SidebarProvider>
       <Sidebar collapsible="offcanvas" {...props}>
@@ -108,8 +95,12 @@ export function AppSidebar({ ...props }) {
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
-                <Link to="/dashboard">
+              <SidebarMenuButton
+                asChild
+                className="data-[slot=sidebar-menu-button]:!p-1.5"
+                data-active={isActive("/dashboard") ? "true" : undefined}
+              >
+                <Link to="/dashboard" className="flex items-center gap-2">
                   <IconDashboard className="!size-5" />
                   <span className="text-base font-semibold">Student Portal</span>
                 </Link>
@@ -121,8 +112,9 @@ export function AppSidebar({ ...props }) {
         {/* 🔹 Sidebar Content */}
         <SidebarContent>
           <NavMain items={data.navMain} />
-          <NavDocuments items={data.documents} />
+
           <NavSecondary items={data.navSecondary} className="mt-auto" />
+
         </SidebarContent>
 
         {/* 🔹 User Footer */}
