@@ -14,6 +14,7 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 
+import { Link } from "react-router-dom";
 import { NavDocuments } from "./nav-documents";
 import { NavMain } from "./nav-main";
 import { NavSecondary } from "./nav-secondary";
@@ -26,6 +27,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarProvider,
 } from "./ui/sidebar";
 
 // 🎓 Sidebar Data (Student Project)
@@ -100,32 +102,34 @@ const data = {
 
 export function AppSidebar({ ...props }) {
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
-      {/* 🔹 Header with brand name */}
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
-              <a href="/dashboard">
-                <IconDashboard className="!size-5" />
-                <span className="text-base font-semibold">Student Portal</span>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
+    <SidebarProvider>
+      <Sidebar collapsible="offcanvas" {...props}>
+        {/* 🔹 Header with brand name */}
+        <SidebarHeader>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
+                <Link to="/dashboard">
+                  <IconDashboard className="!size-5" />
+                  <span className="text-base font-semibold">Student Portal</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarHeader>
 
-      {/* 🔹 Sidebar Content */}
-      <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
-      </SidebarContent>
+        {/* 🔹 Sidebar Content */}
+        <SidebarContent>
+          <NavMain items={data.navMain} />
+          <NavDocuments items={data.documents} />
+          <NavSecondary items={data.navSecondary} className="mt-auto" />
+        </SidebarContent>
 
-      {/* 🔹 User Footer */}
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
-    </Sidebar>
+        {/* 🔹 User Footer */}
+        <SidebarFooter>
+          <NavUser user={data.user} />
+        </SidebarFooter>
+      </Sidebar>
+    </SidebarProvider>
   )
 }

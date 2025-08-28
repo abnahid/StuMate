@@ -1,10 +1,8 @@
 import {
-  Bell,
   ChevronDown,
   LogOut,
-  Search,
   Settings,
-  User,
+  User
 } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
@@ -17,11 +15,7 @@ const Dashboard = () => {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const { user, signOutUser } = useContext(AuthContext);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [notificationCount, setNotificationCount] = useState(0);
   const profileRef = useRef(null);
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add("dark");
@@ -45,13 +39,15 @@ const Dashboard = () => {
   }, []);
 
   const handleLogout = () => {
-    console.log("Logging out...");
-    // Add your logout logic here
+    if (signOutUser) {
+      signOutUser();
+    } else {
+      console.log("Logging out...");
+    }
   };
 
-  const handleNotificationClick = () => {
-    setNotificationCount(0);
-  };
+
+
 
 
   return (
@@ -61,7 +57,9 @@ const Dashboard = () => {
         : 'bg-white'} lg:flex`}>
 
       {/* Sidebar - static on desktop, toggle on mobile */}
-      <AppSidebar />
+      <div className="hidden lg:block h-screen w-64 fixed left-0 top-0 z-40">
+        <AppSidebar />
+      </div>
 
       {/* Main Content */}
       <div className="flex-1">
@@ -91,55 +89,7 @@ const Dashboard = () => {
 
                 {/* Right Side: Search, Notifications, Theme Toggle, Profile */}
                 <div className="flex items-center space-x-1 md:space-x-4">
-                  {/* Search */}
-                  <div className="relative">
-                    <button
-                      onClick={() => setIsSearchOpen(!isSearchOpen)}
-                      className={`p-2 rounded-full ${isDarkMode ? "hover:bg-gray-500" : "hover:bg-gray-100"
-                        } transition-colors duration-200`}
-                    >
-                      <Search className="h-5 w-5" />
-                    </button>
 
-                    {isSearchOpen && (
-                      <div
-                        className={`absolute right-0 mt-2 w-72 p-2 rounded-lg shadow-lg ${isDarkMode
-                          ? "bg-gray-800 border border-gray-700"
-                          : "bg-white border border-gray-200"
-                          }`}
-                      >
-                        <div className="relative">
-                          <input
-                            type="text"
-                            placeholder="Search..."
-                            className={`w-full p-2 pl-8 rounded-md ${isDarkMode
-                              ? "bg-gray-700 text-white border-gray-600 focus:border-purple-500"
-                              : "bg-gray-100 text-gray-800 border-gray-300 focus:border-purple-500"
-                              } border outline-none`}
-                            autoFocus
-                          />
-                          <Search
-                            className={`absolute left-2 top-2.5 h-4 w-4 ${isDarkMode ? "text-gray-400" : "text-gray-500"
-                              }`}
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Notifications */}
-                  <button
-                    className={`relative p-2 rounded-full ${isDarkMode ? "hover:bg-gray-500" : "hover:bg-gray-100"
-                      } transition-colors duration-200`}
-                    onClick={handleNotificationClick}
-                  >
-                    <Bell className="h-5 w-5" />
-                    {notificationCount > 0 && (
-                      <span className="absolute top-0 right-0 h-5 w-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
-                        {notificationCount}
-                      </span>
-                    )}
-                  </button>
 
                   {/* Dark Mode Toggle */}
                   <button
