@@ -1,17 +1,15 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import useAuth from './useAuth';
 import useAxiosPublic from './useAxiosPublic';
-
-// Hardcoded user for demonstration purposes. Replace with actual user context.
-const userEmail = 'user@example.com';
 
 const fetchTransactions = async (axiosPublic, email) => {
     const response = await axiosPublic.get(`/transactions/${email}`);
     return response.data;
 }
 
-const addTransactionFn = async (axiosPublic, newTransaction) => {
-    const transactionWithEmail = { ...newTransaction, email: userEmail };
+const addTransactionFn = async (axiosPublic, newTransaction, email) => {
+    const transactionWithEmail = { ...newTransaction, email };
     const response = await axiosPublic.post('/transactions', transactionWithEmail);
     return response.data;
 }
@@ -29,17 +27,19 @@ const deleteTransactionFn = async (axiosPublic, transactionId) => {
 
 export function useBudget() {
     const axiosPublic = useAxiosPublic();
+    const { user } = useAuth();
     const queryClient = useQueryClient();
-    const endpoint = ['transactions', userEmail];
+    const endpoint = ['transactions', user?.email];
 
     const { data: transactions, error, isLoading } = useQuery({
         queryKey: endpoint,
-        queryFn: () => fetchTransactions(axiosPublic, userEmail),
-        initialData: []
+        queryFn: () => fetchTransactions(axiosPublic, user.email),
+        initialData: [],
+        enabled: !!user?.email
     });
 
     const addTransaction = useMutation({
-        mutationFn: (newTransaction) => addTransactionFn(axiosPublic, newTransaction),
+        mutationFn: (newTransaction) => addTransactionFn(axiosPublic, newTransaction, user.email),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: endpoint });
         }

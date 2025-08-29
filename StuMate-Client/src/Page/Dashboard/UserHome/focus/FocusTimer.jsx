@@ -2,7 +2,7 @@
 
 import { isToday } from 'date-fns';
 import { Award, Clock, Pause, Play, RotateCcw, Target } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button } from '../../../../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../../components/ui/card';
 import { Progress } from '../../../../components/ui/progress';
@@ -23,14 +23,77 @@ export function FocusTimer() {
     const [isActive, setIsActive] = useState(false);
     const [sessionStartTime, setSessionStartTime] = useState(null);
 
+    const handleSessionChange = useCallback((type) => {
+        setIsActive(false);
+        setSessionType(type);
+        setTimeLeft(SESSION_DURATIONS[type]);
+        localStorage.setItem('focusTimerState', JSON.stringify({ type: type, active: false }));
+    }, []);
+
+    // Load state from localStorage on initial render
+    useEffect(() => {
+        try {
+            const savedState = localStorage.getItem('focusTimerState');
+            if (savedState) {
+                const { type, startTime, active, lastSeen } = JSON.parse(savedState);
+
+                if (active && startTime && lastSeen) {
+                    const elapsed = Math.floor((Date.now() - lastSeen) / 1000);
+                    const timeSinceStart = Math.floor((lastSeen - startTime) / 1000);
+                    const remaining = SESSION_DURATIONS[type] - timeSinceStart - elapsed;
+
+                    if (remaining > 0) {
+                        setSessionType(type);
+                        setTimeLeft(remaining);
+                        setIsActive(true);
+                        setSessionStartTime(new Date(startTime));
+                    } else {
+                        // Timer finished while user was away
+                        addFocusSession.mutate({
+                            startTime: new Date(startTime).toISOString(),
+                            endTime: new Date(startTime + SESSION_DURATIONS[type] * 1000).toISOString(),
+                            duration: Math.round(SESSION_DURATIONS[type] / 60),
+                            type: type,
+                        });
+                        localStorage.removeItem('focusTimerState');
+                        handleSessionChange('pomodoro'); // Reset to default
+                    }
+                } else {
+                    handleSessionChange(type || 'pomodoro');
+                }
+            }
+        } catch (error) {
+            console.error("Could not parse focus timer state from localStorage", error);
+            localStorage.removeItem('focusTimerState');
+        }
+    }, [addFocusSession, handleSessionChange]);
+
+
     useEffect(() => {
         let interval = null;
         if (isActive && timeLeft > 0) {
             interval = setInterval(() => {
-                setTimeLeft((prevTime) => prevTime - 1);
+                setTimeLeft((prevTime) => {
+                    const newTime = prevTime - 1;
+                    // Save state on each tick
+                    if (sessionStartTime) {
+                        localStorage.setItem('focusTimerState', JSON.stringify({
+                            type: sessionType,
+                            startTime: sessionStartTime.getTime(),
+                            active: true,
+                            lastSeen: Date.now()
+                        }));
+                    }
+                    return newTime;
+                });
             }, 1000);
         } else if (isActive && timeLeft === 0) {
             setIsActive(false);
+            localStorage.removeItem('focusTimerState');
+
+            // Play sound on completion
+            new Audio('/audio/notification.mp3').play();
+
             if (sessionStartTime) {
                 addFocusSession.mutate({
                     startTime: sessionStartTime.toISOString(),
@@ -39,7 +102,6 @@ export function FocusTimer() {
                     type: sessionType,
                 });
             }
-            // Basic notification for session end
             if (Notification.permission === 'granted') {
                 new Notification('Session Over!', {
                     body: `Your ${sessionType.replace('-', ' ')} session has ended.`,
@@ -52,29 +114,38 @@ export function FocusTimer() {
     }, [isActive, timeLeft, sessionType, addFocusSession, sessionStartTime]);
 
     useEffect(() => {
-        // Request notification permission on component mount
         if (Notification.permission !== 'granted') {
             Notification.requestPermission();
         }
     }, []);
 
-    const handleSessionChange = (type) => {
-        setIsActive(false);
-        setSessionType(type);
-        setTimeLeft(SESSION_DURATIONS[type]);
-    };
-
     const toggleTimer = () => {
         if (!isActive) {
-            setSessionStartTime(new Date());
+            const startTime = new Date();
+            setSessionStartTime(startTime);
+            setIsActive(true);
+            localStorage.setItem('focusTimerState', JSON.stringify({
+                type: sessionType,
+                startTime: startTime.getTime(),
+                active: true,
+                lastSeen: Date.now()
+            }));
+        } else {
+            setIsActive(false);
+            localStorage.setItem('focusTimerState', JSON.stringify({
+                type: sessionType,
+                startTime: sessionStartTime?.getTime(),
+                active: false,
+                lastSeen: Date.now()
+            }));
         }
-        setIsActive(!isActive);
     };
 
     const resetTimer = () => {
         setIsActive(false);
         setTimeLeft(SESSION_DURATIONS[sessionType]);
         setSessionStartTime(null);
+        localStorage.removeItem('focusTimerState');
     };
 
     const formatTime = (seconds) => {
@@ -86,7 +157,7 @@ export function FocusTimer() {
     const progress = (SESSION_DURATIONS[sessionType] - timeLeft) / SESSION_DURATIONS[sessionType] * 100;
 
     const focusStats = useMemo(() => {
-        const todaySessions = sessions.filter(s => isToday(new Date(s.startTime)));
+        const todaySessions = sessions.filter(s => s.startTime && isToday(new Date(s.startTime)));
         const totalFocusTime = todaySessions.filter(s => s.type === 'pomodoro').reduce((sum, s) => sum + s.duration, 0);
         const sessionsCompleted = todaySessions.filter(s => s.type === 'pomodoro').length;
         const longestStreak = sessions.reduce((max, s, i, arr) => {
@@ -114,7 +185,7 @@ export function FocusTimer() {
                     <CardDescription>Use the Pomodoro Technique to boost your productivity.</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col items-center justify-center space-y-8 p-8">
-                    <Tabs defaultValue="pomodoro" onValueChange={(value) => handleSessionChange(value)} className="w-[400px]">
+                    <Tabs value={sessionType} onValueChange={handleSessionChange} className="w-[400px]">
                         <TabsList className="grid w-full grid-cols-3">
                             <TabsTrigger value="pomodoro">Pomodoro</TabsTrigger>
                             <TabsTrigger value="short-break">Short Break</TabsTrigger>
