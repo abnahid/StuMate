@@ -8,6 +8,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { Link, Outlet } from "react-router-dom";
 import { AppSidebar } from "../components/app-sidebar";
+import { FullscreenButton } from "../components/FullscreenButton";
 import { AuthContext } from "../context/AuthProvider";
 import ThemeContext from "../context/ThemeContext";
 
@@ -90,7 +91,7 @@ const Dashboard = () => {
 
                 {/* Right Side: Search, Notifications, Theme Toggle, Profile */}
                 <div className="flex items-center space-x-1 md:space-x-4">
-
+                  <FullscreenButton />
 
                   {/* Dark Mode Toggle */}
                   <button

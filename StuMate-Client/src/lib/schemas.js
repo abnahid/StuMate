@@ -22,3 +22,10 @@ export const taskSchema = z.object({
     subject: z.string().min(2, 'Subject must be at least 2 characters.'),
     deadline: z.string().optional(),
 });
+
+export const journalSchema = z.object({
+    date: z.string().min(1, 'Date is required.'),
+    subjectStudied: z.string().min(2, { message: 'Please enter what you studied.' }),
+    mood: z.enum(['focused', 'motivated', 'distracted', 'tired']),
+    notes: z.string().min(3, { message: 'Notes must be at least 3 characters.' }).max(500, { message: 'Notes cannot exceed 500 characters.' }),
+});

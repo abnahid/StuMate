@@ -1,6 +1,6 @@
 
 import { format, isThisWeek, isToday, parseISO } from 'date-fns';
-import { BookOpenCheck, Calendar, ClipboardCheck, Timer, Wallet } from 'lucide-react';
+import { BookMarked, BookOpenCheck, Calendar, ClipboardCheck, Timer, Wallet } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Badge } from '../../../../components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../../components/ui/card';
@@ -9,8 +9,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { useBudget } from '../../../../hooks/useBudget';
 import { useExamPrep } from '../../../../hooks/useExamPrep';
 import { useFocus } from '../../../../hooks/useFocus';
+import { useJournal } from '../../../../hooks/useJournal';
 import { usePlanner } from '../../../../hooks/usePlanner';
 import { useSchedule } from '../../../../hooks/useSchedule';
+import { MOOD_CONFIG } from '../../../../lib/constants';
 import { cn } from '../../../../lib/utils';
 import { StatCard } from './StatCard';
 
@@ -41,6 +43,7 @@ export function Overview() {
     const { tasks } = usePlanner();
     const { sessions: focusSessions } = useFocus();
     const { practiceSessions } = useExamPrep();
+    const { journals } = useJournal();
 
     const [mounted, setMounted] = useState(false);
     useEffect(() => {
@@ -63,6 +66,12 @@ export function Overview() {
 
     const recentTransactions = [...transactions].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5);
 
+    const recentJournals = [...journals].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 3);
+
+    const journalEntriesThisWeek = journals.filter(
+        (j) => j.date && isThisWeek(parseISO(j.date), { weekStartsOn: 1 })
+    ).length;
+
     const tasksCompletedThisWeek = tasks.filter(
         (t) => t.status === 'done' && t.deadline && isThisWeek(parseISO(t.deadline), { weekStartsOn: 1 })
     ).length;
@@ -80,11 +89,11 @@ export function Overview() {
         return (
             <div className="space-y-6">
                 <h2 className="text-2xl font-bold tracking-tight">Weekly Summary</h2>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-                    {[...Array(5)].map((_, i) => <StatCardLoading key={i} />)}
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+                    {[...Array(6)].map((_, i) => <StatCardLoading key={i} />)}
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <Card>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <Card className="lg:col-span-1">
                         <CardHeader>
                             <CardTitle>Upcoming Tasks</CardTitle>
                             <CardDescription>Your most urgent tasks.</CardDescription>
@@ -93,10 +102,19 @@ export function Overview() {
                             <Skeleton className="h-40 w-full" />
                         </CardContent>
                     </Card>
-                    <Card>
+                    <Card className="lg:col-span-1">
                         <CardHeader>
                             <CardTitle>Recent Transactions</CardTitle>
                             <CardDescription>Your latest spending and income.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <Skeleton className="h-40 w-full" />
+                        </CardContent>
+                    </Card>
+                    <Card className="lg:col-span-1">
+                        <CardHeader>
+                            <CardTitle>Recent Journal Entries</CardTitle>
+                            <CardDescription>Your latest reflections.</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <Skeleton className="h-40 w-full" />
@@ -110,7 +128,7 @@ export function Overview() {
     return (
         <div className="space-y-6">
             <h2 className="text-2xl font-bold tracking-tight">Weekly Summary</h2>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 ">
                 <StatCard
                     title="Classes This Week"
                     value={classesThisWeek.toString()}
@@ -141,10 +159,16 @@ export function Overview() {
                     icon={BookOpenCheck}
                     description="Generated in Exam Prep."
                 />
+                <StatCard
+                    title="Journal Entries"
+                    value={journalEntriesThisWeek.toString()}
+                    icon={BookMarked}
+                    description="Reflections logged."
+                />
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
+                <Card className="lg:col-span-1">
                     <CardHeader>
                         <CardTitle>Upcoming Tasks</CardTitle>
                         <CardDescription>Your most urgent tasks.</CardDescription>
@@ -176,7 +200,7 @@ export function Overview() {
                         </Table>
                     </CardContent>
                 </Card>
-                <Card>
+                <Card className="lg:col-span-1">
                     <CardHeader>
                         <CardTitle>Recent Transactions</CardTitle>
                         <CardDescription>Your latest spending and income.</CardDescription>
@@ -209,7 +233,32 @@ export function Overview() {
                         </Table>
                     </CardContent>
                 </Card>
+                <Card className="lg:col-span-1">
+                    <CardHeader>
+                        <CardTitle>Recent Journal Entries</CardTitle>
+                        <CardDescription>Your latest reflections.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        {recentJournals.length > 0 ? recentJournals.map(journal => {
+                            const moodConfig = MOOD_CONFIG[journal.mood] || MOOD_CONFIG.unknown;
+                            const MoodIcon = moodConfig.icon;
+                            return (
+                                <div key={journal._id} className="flex items-start gap-4">
+                                    <MoodIcon className={cn("h-5 w-5 mt-1", moodConfig.color)} />
+                                    <div className="flex-1">
+                                        <p className="font-semibold">{journal.subjectStudied}</p>
+                                        <p className="text-sm text-muted-foreground truncate">{journal.notes}</p>
+                                        <p className="text-xs text-muted-foreground">{format(new Date(journal.date), 'MMM d, yyyy')}</p>
+                                    </div>
+                                </div>
+                            )
+                        }) : (
+                            <p className="text-center text-muted-foreground">No recent journal entries.</p>
+                        )}
+                    </CardContent>
+                </Card>
             </div>
         </div>
     );
 }
+

@@ -10,6 +10,7 @@ import {
   IconSettings
 } from "@tabler/icons-react";
 
+import { BookMarked } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { NavMain } from "./nav-main";
 import { NavSecondary } from "./nav-secondary";
@@ -63,6 +64,7 @@ const data = {
       url: "/dashboard/focus",
       icon: IconClock,
     },
+    { url: '/dashboard/journal', title: 'Study Journal', icon: BookMarked },
   ],
   navSecondary: [
     {

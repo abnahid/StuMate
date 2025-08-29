@@ -24,6 +24,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { BudgetTracker } from "../Page/Dashboard/UserHome/budget/BudgetTracker";
 import { Overview } from "../Page/Dashboard/UserHome/dashboard/Overview";
 import { FocusTimer } from "../Page/Dashboard/UserHome/focus/FocusTimer";
+import { StudyJournal } from "../Page/Dashboard/UserHome/journal/StudyJournal";
 import { PlannerBoard } from "../Page/Dashboard/UserHome/planner/PlannerBoard";
 import { ScheduleView } from "../Page/Dashboard/UserHome/schedule/ScheduleView";
 
@@ -58,6 +59,7 @@ const router = createBrowserRouter([
             { path: "budget", element: <BudgetTracker /> },
             { path: "planner", element: <PlannerBoard /> },
             { path: "focus", element: <FocusTimer /> },
+            { path: "journal", element: <StudyJournal /> },
 
             // Settings (for both user/admin)
             {
