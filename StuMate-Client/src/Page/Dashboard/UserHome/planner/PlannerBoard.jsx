@@ -41,7 +41,7 @@ export function PlannerBoard() {
 
         const task = tasks.find(t => t._id === draggableId);
         if (task) {
-            updateTask({ ...task, status: destination.droppableId });
+            updateTask.mutate({ ...task, status: destination.droppableId });
         }
     };
 

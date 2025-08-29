@@ -1,18 +1,18 @@
-
-import { zodResolver } from '@hookform/resolvers/zod';
-import { format } from 'date-fns';
-import { CalendarIcon } from 'lucide-react';
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { Button } from '../../../../components/ui/button';
-import { Calendar } from '../../../../components/ui/calendar';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { Button } from "../../../../components/ui/button";
+import { Calendar } from "../../../../components/ui/calendar";
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from '../../../../components/ui/dialog';
+} from "../../../../components/ui/dialog";
 import {
     Form,
     FormControl,
@@ -20,12 +20,12 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from '../../../../components/ui/form';
-import { Input } from '../../../../components/ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '../../../../components/ui/popover';
-import { useSchedule } from '../../../../hooks/useSchedule';
-import { classSchema } from '../../../../lib/schemas';
-import { cn } from '../../../../lib/utils';
+} from "../../../../components/ui/form";
+import { Input } from "../../../../components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "../../../../components/ui/popover";
+import { useSchedule } from "../../../../hooks/useSchedule";
+import { classSchema } from "../../../../lib/schemas";
+import { cn } from "../../../../lib/utils";
 
 export function ScheduleForm({
     isOpen,
@@ -61,9 +61,9 @@ export function ScheduleForm({
 
     function onSubmit(values) {
         if (classItem) {
-            updateClass({ ...values, _id: classItem._id });
+            updateClass.mutate({ ...values, _id: classItem._id });
         } else {
-            addClass(values);
+            addClass.mutate(values);
         }
         setIsOpen(false);
     }
@@ -75,6 +75,9 @@ export function ScheduleForm({
                     <DialogTitle>
                         {classItem ? 'Edit Event' : 'Add New Event'}
                     </DialogTitle>
+                    <DialogDescription>
+                        Fill out the form to add or edit a calendar event. Click save when you're done.
+                    </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
@@ -132,7 +135,7 @@ export function ScheduleForm({
                                         <PopoverContent className="w-auto p-0" align="start">
                                             <Calendar
                                                 mode="single"
-                                                selected={new Date(field.value)}
+                                                selected={field.value ? new Date(field.value) : null}
                                                 onSelect={(date) => field.onChange(date?.toISOString())}
                                                 initialFocus
                                             />

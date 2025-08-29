@@ -73,7 +73,7 @@ export function TransactionForm({
         if (transaction) {
             updateTransaction({ ...values, _id: transaction._id });
         } else {
-            addTransaction(values);
+            addTransaction.mutate(values);
         }
         setIsOpen(false);
     }

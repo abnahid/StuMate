@@ -73,7 +73,7 @@ export function TaskCard({ task, index, onEdit }) {
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
                                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                        <AlertDialogAction onClick={() => deleteTask(task._id)}>
+                                        <AlertDialogAction onClick={() => deleteTask.mutate(task._id)}>
                                             Delete
                                         </AlertDialogAction>
                                     </AlertDialogFooter>

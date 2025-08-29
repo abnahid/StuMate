@@ -32,7 +32,7 @@ export function FocusTimer() {
         } else if (isActive && timeLeft === 0) {
             setIsActive(false);
             if (sessionStartTime) {
-                addFocusSession({
+                addFocusSession.mutate({
                     startTime: sessionStartTime.toISOString(),
                     endTime: new Date().toISOString(),
                     duration: Math.round(SESSION_DURATIONS[sessionType] / 60),

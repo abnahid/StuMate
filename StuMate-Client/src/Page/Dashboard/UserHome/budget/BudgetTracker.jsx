@@ -149,7 +149,7 @@ export function BudgetTracker() {
                                                         </AlertDialogHeader>
                                                         <AlertDialogFooter>
                                                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                            <AlertDialogAction onClick={() => deleteTransaction(t._id)}>
+                                                            <AlertDialogAction onClick={() => deleteTransaction.mutate(t._id)}>
                                                                 Delete
                                                             </AlertDialogAction>
                                                         </AlertDialogFooter>

@@ -127,7 +127,7 @@ export function WeekView({ currentDate, onEditEvent }) {
                                                         </AlertDialogHeader>
                                                         <AlertDialogFooter>
                                                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                            <AlertDialogAction onClick={() => deleteClass(event._id)}>
+                                                            <AlertDialogAction onClick={() => deleteClass.mutate(event._id)}>
                                                                 Delete
                                                             </AlertDialogAction>
                                                         </AlertDialogFooter>

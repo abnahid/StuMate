@@ -1,33 +1,38 @@
 
-import useSWR, { mutate } from 'swr';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import useAuth from './useAuth';
 import useAxiosPublic from './useAxiosPublic';
 
-const fetcher = (url, axios) => axios().get(url).then((res) => res.data);
+const fetchSessions = async (axiosPublic, email) => {
+    const response = await axiosPublic.get(`/focus-sessions/${email}`);
+    return response.data;
+}
 
-// Hardcoded user for demonstration purposes. Replace with actual user context.
-const userEmail = 'user@example.com';
-
+const addSessionFn = async (axiosPublic, newSession, email) => {
+    const sessionWithEmail = { ...newSession, email };
+    const response = await axiosPublic.post('/focus-sessions', sessionWithEmail);
+    return response.data;
+}
 
 export function useFocus() {
     const axiosPublic = useAxiosPublic();
-    const endpoint = `/focus-sessions/${userEmail}`;
+    const { user } = useAuth();
+    const queryClient = useQueryClient();
+    const endpoint = ['focus-sessions', user?.email];
 
-    const { data: sessions, error, isLoading } = useSWR(endpoint, (url) => fetcher(url, axiosPublic), {
-        fallbackData: []
+    const { data: sessions, error, isLoading } = useQuery({
+        queryKey: endpoint,
+        queryFn: () => fetchSessions(axiosPublic, user.email),
+        initialData: [],
+        enabled: !!user?.email,
     });
 
-    const addFocusSession = async (newSession) => {
-        try {
-            const sessionWithEmail = { ...newSession, email: userEmail };
-            const response = await axiosPublic.post('/focus-sessions', sessionWithEmail);
-            const createdSession = response.data;
-            mutate(endpoint, [...(sessions || []), createdSession], false);
-            return createdSession;
-        } catch (error) {
-            console.error('Failed to add focus session:', error);
-            mutate(endpoint);
-        }
-    };
+    const addFocusSession = useMutation({
+        mutationFn: (newSession) => addSessionFn(axiosPublic, newSession, user.email),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: endpoint });
+        },
+    });
 
     return {
         sessions: sessions || [],

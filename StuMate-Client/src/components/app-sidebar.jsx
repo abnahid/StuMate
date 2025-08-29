@@ -1,4 +1,3 @@
-"use client";
 
 import {
   IconBook2,
@@ -36,7 +35,7 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/dashboard",
+      url: "/dashboard/userHome",
       icon: IconDashboard,
     },
     {

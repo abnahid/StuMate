@@ -1,62 +1,64 @@
 
-import useSWR, { mutate } from 'swr';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import useAuth from './useAuth';
 import useAxiosPublic from './useAxiosPublic';
 
-const fetcher = (url, axios) => axios().get(url).then((res) => res.data);
+const fetchTasks = async (axiosPublic, email) => {
+    const response = await axiosPublic.get(`/tasks/${email}`);
+    return response.data;
+}
 
-// Hardcoded user for demonstration purposes. Replace with actual user context.
-const userEmail = 'user@example.com';
+const addTaskFn = async (axiosPublic, newTask, email) => {
+    const taskWithEmail = { ...newTask, email };
+    const response = await axiosPublic.post('/tasks', taskWithEmail);
+    return response.data;
+}
+
+const updateTaskFn = async (axiosPublic, updatedTask) => {
+    const taskId = updatedTask._id;
+    const response = await axiosPublic.put(`/tasks/${taskId}`, updatedTask);
+    return response.data;
+}
+
+const deleteTaskFn = async (axiosPublic, taskId) => {
+    const response = await axiosPublic.delete(`/tasks/${taskId}`);
+    return response.data;
+}
+
 
 export function usePlanner() {
     const axiosPublic = useAxiosPublic();
-    const endpoint = `/tasks/${userEmail}`;
+    const { user } = useAuth();
+    const queryClient = useQueryClient();
+    const endpoint = ['tasks', user?.email];
 
-    const { data: tasks, error, isLoading } = useSWR(endpoint, (url) => fetcher(url, axiosPublic), {
-        fallbackData: [] // Start with empty and let SWR fetch real data
+    const { data: tasks, error, isLoading } = useQuery({
+        queryKey: endpoint,
+        queryFn: () => fetchTasks(axiosPublic, user.email),
+        initialData: [],
+        enabled: !!user?.email
     });
 
-    const addTask = async (newTask) => {
-        try {
-            const taskWithEmail = { ...newTask, email: userEmail };
-            const response = await axiosPublic.post('/tasks', taskWithEmail);
-            const createdTask = response.data;
-            // Re-fetch data after mutation
-            mutate(endpoint);
-            return createdTask;
-        } catch (error) {
-            console.error('Failed to add task:', error);
-            // Re-fetch data to stay in sync with the server
-            mutate(endpoint);
+    const addTask = useMutation({
+        mutationFn: (newTask) => addTaskFn(axiosPublic, newTask, user.email),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: endpoint });
         }
-    };
+    });
 
-    const updateTask = async (updatedTask) => {
-        try {
-            // Use _id for MongoDB documents
-            const taskId = updatedTask._id;
-            // Send the whole task object for a PUT request
-            await axiosPublic.put(`/tasks/${taskId}`, updatedTask);
-            // Re-fetch data after mutation
-            mutate(endpoint);
-        } catch (error) {
-            console.error('Failed to update task:', error);
-            // Re-fetch data to stay in sync with the server
-            mutate(endpoint);
+    const updateTask = useMutation({
+        mutationFn: (updatedTask) => updateTaskFn(axiosPublic, updatedTask),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: endpoint });
         }
-    };
+    });
 
-    const deleteTask = async (id) => {
-        try {
-            // Use _id for MongoDB documents
-            await axiosPublic.delete(`/tasks/${id}`);
-            // Re-fetch data after mutation
-            mutate(endpoint);
-        } catch (error) {
-            console.error('Failed to delete task:', error);
-            // Re-fetch data to stay in sync with the server
-            mutate(endpoint);
+    const deleteTask = useMutation({
+        mutationFn: (taskId) => deleteTaskFn(axiosPublic, taskId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: endpoint });
         }
-    };
+    });
 
     return {
         tasks: tasks || [],

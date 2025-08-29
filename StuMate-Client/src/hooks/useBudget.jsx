@@ -1,50 +1,63 @@
 
-import useSWR, { mutate } from 'swr';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import useAxiosPublic from './useAxiosPublic';
-
-const fetcher = (url, axios) => axios().get(url).then((res) => res.data);
 
 // Hardcoded user for demonstration purposes. Replace with actual user context.
 const userEmail = 'user@example.com';
 
+const fetchTransactions = async (axiosPublic, email) => {
+    const response = await axiosPublic.get(`/transactions/${email}`);
+    return response.data;
+}
+
+const addTransactionFn = async (axiosPublic, newTransaction) => {
+    const transactionWithEmail = { ...newTransaction, email: userEmail };
+    const response = await axiosPublic.post('/transactions', transactionWithEmail);
+    return response.data;
+}
+
+const updateTransactionFn = async (axiosPublic, updatedTransaction) => {
+    const response = await axiosPublic.put(`/transactions/${updatedTransaction._id}`, updatedTransaction);
+    return response.data;
+}
+
+const deleteTransactionFn = async (axiosPublic, transactionId) => {
+    const response = await axiosPublic.delete(`/transactions/${transactionId}`);
+    return response.data;
+}
+
+
 export function useBudget() {
     const axiosPublic = useAxiosPublic();
-    const endpoint = `/transactions/${userEmail}`;
+    const queryClient = useQueryClient();
+    const endpoint = ['transactions', userEmail];
 
-    const { data: transactions, error, isLoading } = useSWR(endpoint, (url) => fetcher(url, axiosPublic), {
-        fallbackData: [] // Start with empty and let SWR fetch real data
+    const { data: transactions, error, isLoading } = useQuery({
+        queryKey: endpoint,
+        queryFn: () => fetchTransactions(axiosPublic, userEmail),
+        initialData: []
     });
 
-    const addTransaction = async (newTransaction) => {
-        try {
-            const transactionWithEmail = { ...newTransaction, email: userEmail };
-            await axiosPublic.post('/transactions', transactionWithEmail);
-            mutate(endpoint);
-        } catch (error) {
-            console.error('Failed to add transaction:', error);
-            mutate(endpoint);
+    const addTransaction = useMutation({
+        mutationFn: (newTransaction) => addTransactionFn(axiosPublic, newTransaction),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: endpoint });
         }
-    };
+    });
 
-    const updateTransaction = async (updatedTransaction) => {
-        try {
-            await axiosPublic.put(`/transactions/${updatedTransaction._id}`, updatedTransaction);
-            mutate(endpoint);
-        } catch (error) {
-            console.error('Failed to update transaction:', error);
-            mutate(endpoint);
+    const updateTransaction = useMutation({
+        mutationFn: (updatedTransaction) => updateTransactionFn(axiosPublic, updatedTransaction),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: endpoint });
         }
-    };
+    });
 
-    const deleteTransaction = async (id) => {
-        try {
-            await axiosPublic.delete(`/transactions/${id}`);
-            mutate(endpoint);
-        } catch (error) {
-            console.error('Failed to delete transaction:', error);
-            mutate(endpoint);
+    const deleteTransaction = useMutation({
+        mutationFn: (transactionId) => deleteTransactionFn(axiosPublic, transactionId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: endpoint });
         }
-    };
+    });
 
     return {
         transactions: transactions || [],

@@ -1,4 +1,3 @@
-"use client";
 
 import ThemeContext from "@/context/ThemeContext";
 import { Menu } from "lucide-react";

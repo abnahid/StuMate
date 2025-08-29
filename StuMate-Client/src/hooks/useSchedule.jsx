@@ -1,53 +1,64 @@
 
-import useSWR, { mutate } from 'swr';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import useAuth from './useAuth';
 import useAxiosPublic from './useAxiosPublic';
 
-const fetcher = (url, axios) => axios().get(url).then((res) => res.data);
 
-// Hardcoded user for demonstration purposes. Replace with actual user context.
-const userEmail = 'user@example.com';
+const fetchClasses = async (axiosPublic, email) => {
+    const response = await axiosPublic.get(`/classes/${email}`);
+    return response.data;
+};
+
+const addClassFn = async (axiosPublic, newClass, email) => {
+    const classWithEmail = { ...newClass, email };
+    const response = await axiosPublic.post('/classes', classWithEmail);
+    return response.data;
+};
+
+const updateClassFn = async (axiosPublic, updatedClass) => {
+    const response = await axiosPublic.put(`/classes/${updatedClass._id}`, updatedClass);
+    return response.data;
+};
+
+const deleteClassFn = async (axiosPublic, classId) => {
+    const response = await axiosPublic.delete(`/classes/${classId}`);
+    return response.data;
+};
 
 
 export function useSchedule() {
     const axiosPublic = useAxiosPublic();
-    const endpoint = `/classes/${userEmail}`;
+    const { user } = useAuth();
+    const queryClient = useQueryClient();
+    const endpoint = ['classes', user?.email];
 
-    const { data: classes, error, isLoading } = useSWR(endpoint, (url) => fetcher(url, axiosPublic), {
-        fallbackData: [],
+    const { data: classes, error, isLoading } = useQuery({
+        queryKey: endpoint,
+        queryFn: () => fetchClasses(axiosPublic, user.email),
+        initialData: [],
+        enabled: !!user?.email,
     });
 
-    const addClass = async (newClass) => {
-        try {
-            const classWithEmail = { ...newClass, email: userEmail };
-            const response = await axiosPublic.post('/classes', classWithEmail);
-            const createdClass = response.data;
-            mutate(endpoint, [...(classes || []), createdClass], false);
-            return createdClass;
-        } catch (error) {
-            console.error('Failed to add class:', error);
-            mutate(endpoint);
-        }
-    };
+    const addClass = useMutation({
+        mutationFn: (newClass) => addClassFn(axiosPublic, newClass, user.email),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: endpoint });
+        },
+    });
 
-    const updateClass = async (updatedClass) => {
-        try {
-            await axiosPublic.put(`/classes/${updatedClass._id}`, updatedClass);
-            mutate(endpoint, classes?.map((c) => (c._id === updatedClass._id ? updatedClass : c)), false);
-        } catch (error) {
-            console.error('Failed to update class:', error);
-            mutate(endpoint);
-        }
-    };
+    const updateClass = useMutation({
+        mutationFn: (updatedClass) => updateClassFn(axiosPublic, updatedClass),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: endpoint });
+        },
+    });
 
-    const deleteClass = async (id) => {
-        try {
-            await axiosPublic.delete(`/classes/${id}`);
-            mutate(endpoint, classes?.filter((c) => c._id !== id), false);
-        } catch (error) {
-            console.error('Failed to delete class:', error);
-            mutate(endpoint);
-        }
-    };
+    const deleteClass = useMutation({
+        mutationFn: (classId) => deleteClassFn(axiosPublic, classId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: endpoint });
+        },
+    });
 
     return {
         classes: classes || [],
