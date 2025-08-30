@@ -3,19 +3,13 @@ import {
   IconHelp, IconReport, IconSettings
 } from "@tabler/icons-react";
 import { BookMarked } from "lucide-react";
-import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { AuthContext } from "../context/AuthProvider";
-import ThemeContext from "../context/ThemeContext";
 import { NavMain } from "./nav-main";
 import { NavSecondary } from "./nav-secondary";
-import { NavUser } from "./nav-user";
 import {
-  Sidebar, SidebarContent, SidebarFooter, SidebarHeader,
-  SidebarMenu, SidebarMenuButton, SidebarMenuItem
+  Sidebar, SidebarContent, SidebarFooter, SidebarHeader
 } from "./ui/sidebar";
 
-// Sidebar navigation data only
 const navMain = [
   { title: "Dashboard", url: "/dashboard/userHome", icon: IconDashboard },
   { title: "Schedule", url: "/dashboard/schedule", icon: IconCalendar },
@@ -27,79 +21,28 @@ const navMain = [
 ];
 const navSecondary = [
   { title: "Settings", url: "/dashboard/settings", icon: IconSettings },
-  { title: "Get Help", url: "/help", icon: IconHelp },
+  { title: "Get Help", url: "/dashboard/help", icon: IconHelp },
 ];
 
 export function AppSidebar(props) {
   const location = useLocation();
-  const { user, signOutUser } = useContext(AuthContext); // Get user from AuthContext
-  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
-
-  // Profile dropdown logic (if needed)
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const profileRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (profileRef.current && !profileRef.current.contains(event.target)) {
-        setIsProfileOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const handleLogout = () => {
-    if (signOutUser) {
-      signOutUser();
-    } else {
-      console.log("Logging out...");
-    }
-  };
-
-  const isActive = (url) =>
-    location.pathname === url ||
-    location.pathname.startsWith(url + "/");
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       {/* Header */}
       <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
-              data-active={isActive("/dashboard/userHome") ? "true" : undefined}
-            >
-              <Link to="/dashboard" className="flex items-center gap-2">
-                <IconDashboard className="!size-5" />
-                <span className="text-base font-semibold">Student Portal</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <Link to="/dashboard">
+          <img src="/assets/SVG/logo.svg" alt="StuMate" className="h-12" />
+        </Link>
       </SidebarHeader>
 
-      {/* Sidebar Content */}
       <SidebarContent>
-        <NavMain items={navMain} />
-        <NavSecondary items={navSecondary} className="mt-auto" />
+        <NavMain items={navMain} pathname={location.pathname} />
+        <NavSecondary items={navSecondary} className="mt-auto" pathname={location.pathname} />
       </SidebarContent>
 
-      {/* User Footer - get user from AuthContext */}
       <SidebarFooter>
-        <NavUser
-          user={user}
-          onLogout={handleLogout}
-          isProfileOpen={isProfileOpen}
-          setIsProfileOpen={setIsProfileOpen}
-          profileRef={profileRef}
-          isDarkMode={isDarkMode}
-          toggleTheme={toggleTheme}
-        />
+        <p className="text-xs text-gray-500 text-center">v1.0.0 Ab Nahid</p>
       </SidebarFooter>
     </Sidebar>
   );

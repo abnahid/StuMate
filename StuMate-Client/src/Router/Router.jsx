@@ -21,9 +21,13 @@ import SettingsLayout from "@/Page/Dashboard/Settings/SettingsLayout";
 import AboutPage from "@/Page/About/AboutPage";
 
 import { createBrowserRouter } from "react-router-dom";
+import BillingSettings from "../Page/Dashboard/Settings/BillingSettings";
+import Plan from "../Page/Dashboard/Settings/Plan";
 import { BudgetTracker } from "../Page/Dashboard/UserHome/budget/BudgetTracker";
 import { Overview } from "../Page/Dashboard/UserHome/dashboard/Overview";
+import ExamGenerator from "../Page/Dashboard/UserHome/exam/ExamGenerator";
 import { FocusTimer } from "../Page/Dashboard/UserHome/focus/FocusTimer";
+import { HelpPage } from "../Page/Dashboard/UserHome/HelpPage";
 import { StudyJournal } from "../Page/Dashboard/UserHome/journal/StudyJournal";
 import { PlannerBoard } from "../Page/Dashboard/UserHome/planner/PlannerBoard";
 import { ScheduleView } from "../Page/Dashboard/UserHome/schedule/ScheduleView";
@@ -60,6 +64,8 @@ const router = createBrowserRouter([
             { path: "planner", element: <PlannerBoard /> },
             { path: "focus", element: <FocusTimer /> },
             { path: "journal", element: <StudyJournal /> },
+            { path: "exam-prep", element: <ExamGenerator /> },
+            { path: "help", element: <HelpPage /> },
 
             // Settings (for both user/admin)
             {
@@ -69,6 +75,8 @@ const router = createBrowserRouter([
                     { path: "profile", element: <ProfileSettings /> },
                     { path: "password", element: <PasswordSettings /> },
                     { path: "notifications", element: <NotificationSettings /> },
+                    { path: "billings", element: <BillingSettings /> },
+                    { path: "plan", element: <Plan /> },
                     { index: true, element: <ProfileSettings /> },
                 ],
             },

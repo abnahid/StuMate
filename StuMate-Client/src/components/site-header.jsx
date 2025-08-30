@@ -29,6 +29,7 @@ export function SiteHeader() {
     '/dashboard/exam-prep': 'Exam Prep',
     '/dashboard/focus': 'Focus Mode',
     '/dashboard/journal': 'Study Journal',
+    '/dashboard/help': 'Get Help',
   };
 
   const pathname = useLocation().pathname;
@@ -80,9 +81,9 @@ export function SiteHeader() {
             aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
           >
             {isDarkMode ? (
-              <Sun className="h-5 w-5 rotate-0 scale-100 transition-all" />
+              <Sun className="h-7 w-7 text-3xl rotate-0 scale-100 transition-all" />
             ) : (
-              <Moon className="h-5 w-5 rotate-0 scale-100 transition-all" />
+              <Moon className="h-7 w-7 rotate-0 scale-100 transition-all" />
             )}
           </Button>
 

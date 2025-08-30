@@ -170,31 +170,39 @@ export function Overview() {
                         <CardTitle>Upcoming Tasks</CardTitle>
                         <CardDescription>Your most urgent tasks.</CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Task</TableHead>
-                                    <TableHead>Priority</TableHead>
-                                    <TableHead>Due Date</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {upcomingTasks.length > 0 ? upcomingTasks.map(task => (
-                                    <TableRow key={task._id}>
-                                        <TableCell className="font-medium">{task.title}</TableCell>
-                                        <TableCell>
-                                            <Badge variant={priorityVariant[task.priority]}>{task.priority}</Badge>
-                                        </TableCell>
-                                        <TableCell>{task.deadline ? format(new Date(task.deadline), "MMM d, yyyy") : 'No deadline'}</TableCell>
-                                    </TableRow>
-                                )) : (
+                    <CardContent className="min-h-[160px] flex flex-col justify-center">
+                        <div className="w-full min-w-[320px]">
+                            <Table>
+                                <TableHeader>
                                     <TableRow>
-                                        <TableCell colSpan={3} className="text-center text-muted-foreground">No upcoming tasks.</TableCell>
+                                        <TableHead>Task</TableHead>
+                                        <TableHead>Priority</TableHead>
+                                        <TableHead>Due Date</TableHead>
                                     </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
+                                </TableHeader>
+                                <TableBody>
+                                    {upcomingTasks.length > 0 ? upcomingTasks.map(task => (
+                                        <TableRow key={task._id}>
+                                            <TableCell className="font-medium">{task.title}</TableCell>
+                                            <TableCell className="py-3.5">
+                                                <Badge variant={priorityVariant[task.priority]} >{task.priority}</Badge>
+                                            </TableCell>
+                                            <TableCell>
+                                                {task.deadline
+                                                    ? format(new Date(task.deadline), "MMM d, yyyy")
+                                                    : 'No deadline'}
+                                            </TableCell>
+                                        </TableRow>
+                                    )) : (
+                                        <TableRow>
+                                            <TableCell colSpan={3} className="text-center text-muted-foreground py-10">
+                                                No upcoming tasks.
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </div>
                     </CardContent>
                 </Card>
                 <Card className="lg:col-span-1">
