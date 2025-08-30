@@ -24,16 +24,13 @@ const priorityVariant = {
 
 function StatCardLoading() {
     return (
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <Skeleton className="h-4 w-2/3" />
-                <Skeleton className="h-4 w-4" />
-            </CardHeader>
-            <CardContent>
-                <Skeleton className="h-7 w-1/3" />
-                <Skeleton className="h-3 w-1/2 mt-1" />
-            </CardContent>
-        </Card>
+        <div className="p-4 bg-card rounded-lg flex items-center gap-4">
+            <Skeleton className="h-12 w-12 rounded-lg" />
+            <div className="space-y-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-7 w-16" />
+            </div>
+        </div>
     )
 }
 
@@ -89,10 +86,10 @@ export function Overview() {
         return (
             <div className="space-y-6">
                 <h2 className="text-2xl font-bold tracking-tight">Weekly Summary</h2>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+                <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
                     {[...Array(6)].map((_, i) => <StatCardLoading key={i} />)}
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <Card className="lg:col-span-1">
                         <CardHeader>
                             <CardTitle>Upcoming Tasks</CardTitle>
@@ -111,7 +108,7 @@ export function Overview() {
                             <Skeleton className="h-40 w-full" />
                         </CardContent>
                     </Card>
-                    <Card className="lg:col-span-1">
+                    <Card className="lg:col-span-2">
                         <CardHeader>
                             <CardTitle>Recent Journal Entries</CardTitle>
                             <CardDescription>Your latest reflections.</CardDescription>
@@ -128,42 +125,42 @@ export function Overview() {
     return (
         <div className="space-y-6">
             <h2 className="text-2xl font-bold tracking-tight">Weekly Summary</h2>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 ">
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 <StatCard
                     title="Classes This Week"
                     value={classesThisWeek.toString()}
                     icon={Calendar}
-                    description="Total classes scheduled."
+                    color="amber"
                 />
                 <StatCard
                     title="Money Spent"
                     value={`$${moneySpentThisWeek.toFixed(2)}`}
                     icon={Wallet}
-                    description="Expenses this week."
+                    color="purple"
                 />
                 <StatCard
                     title="Tasks Completed"
                     value={tasksCompletedThisWeek.toString()}
                     icon={ClipboardCheck}
-                    description="Tasks completed this week."
+                    color="green"
                 />
                 <StatCard
                     title="Focus Time Today"
                     value={`${focusTimeToday} min`}
                     icon={Timer}
-                    description="Pomodoro sessions."
+                    color="sky"
                 />
                 <StatCard
                     title="Practice Questions"
                     value={questionsPracticedThisWeek.toString()}
                     icon={BookOpenCheck}
-                    description="Generated in Exam Prep."
+                    color="blue"
                 />
                 <StatCard
                     title="Journal Entries"
                     value={journalEntriesThisWeek.toString()}
                     icon={BookMarked}
-                    description="Reflections logged."
+                    color="red"
                 />
             </div>
 
@@ -233,7 +230,7 @@ export function Overview() {
                         </Table>
                     </CardContent>
                 </Card>
-                <Card className="lg:col-span-1">
+                <Card className="lg:col-span-2">
                     <CardHeader>
                         <CardTitle>Recent Journal Entries</CardTitle>
                         <CardDescription>Your latest reflections.</CardDescription>
@@ -261,4 +258,5 @@ export function Overview() {
         </div>
     );
 }
+
 

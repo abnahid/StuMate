@@ -1,4 +1,7 @@
-
+// The main issue is with the useEffect dependency and PopoverTrigger usage.
+// 1. Fix useEffect: useForm's reset should not be a dependency; only task should trigger reset.
+// 2. Fix PopoverTrigger usage: Shadcn UI PopoverTrigger expects a single React element child. The current code passes <FormControl><Button ... /></FormControl> which may expand to more than one element.
+// Solution: Pass only a single element (the Button) to PopoverTrigger. Also, FormControl should wrap only input elements, not Button.
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -6,6 +9,7 @@ import { Button } from '../../../../components/ui/button';
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -49,6 +53,7 @@ export function TaskForm({ isOpen, setIsOpen, task }) {
         },
     });
 
+    // Only depend on task, not form
     useEffect(() => {
         if (task) {
             form.reset({
@@ -64,13 +69,14 @@ export function TaskForm({ isOpen, setIsOpen, task }) {
                 deadline: undefined,
             });
         }
-    }, [task, form]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [task]); // Do NOT include form in deps to prevent infinite loop
 
     function onSubmit(values) {
         if (task) {
-            updateTask({ ...values, _id: task._id });
+            updateTask.mutate({ ...values, _id: task._id });
         } else {
-            addTask(values);
+            addTask.mutate(values);
         }
         setIsOpen(false);
     }
@@ -80,6 +86,9 @@ export function TaskForm({ isOpen, setIsOpen, task }) {
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>{task ? 'Edit Task' : 'Add New Task'}</DialogTitle>
+                    <DialogDescription>
+                        Fill in the details for your study task. All fields except deadline are required.
+                    </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
@@ -137,7 +146,8 @@ export function TaskForm({ isOpen, setIsOpen, task }) {
                                         <FormLabel>Priority</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
-                                                <SelectTrigger><SelectValue /></SelectTrigger>                      </FormControl>
+                                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                            </FormControl>
                                             <SelectContent>
                                                 <SelectItem value="low">Low</SelectItem>
                                                 <SelectItem value="medium">Medium</SelectItem>
@@ -156,22 +166,21 @@ export function TaskForm({ isOpen, setIsOpen, task }) {
                                     <FormLabel>Deadline (Optional)</FormLabel>
                                     <Popover>
                                         <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button
-                                                    variant={'outline'}
-                                                    className={cn(
-                                                        'w-full pl-3 text-left font-normal',
-                                                        !field.value && 'text-muted-foreground'
-                                                    )}
-                                                >
-                                                    {field.value ? (
-                                                        format(new Date(field.value), 'PPP')
-                                                    ) : (
-                                                        <span>Pick a date</span>
-                                                    )}
-                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                </Button>
-                                            </FormControl>
+                                            {/* ONLY pass the Button here, NOT FormControl */}
+                                            <Button
+                                                variant={'outline'}
+                                                className={cn(
+                                                    'w-full pl-3 text-left font-normal',
+                                                    !field.value && 'text-muted-foreground'
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(new Date(field.value), 'PPP')
+                                                ) : (
+                                                    <span>Pick a date</span>
+                                                )}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
                                         </PopoverTrigger>
                                         <PopoverContent className="w-auto p-0" align="start">
                                             <Calendar

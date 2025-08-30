@@ -6,6 +6,7 @@
 @theme inline {
   --color-BgPrimary: #0874ed;
   --color-BgSecondary: var(--secondary);
+  --color-BgDashboard: #f4f7fe;
   --color-BgMainColor: #ffffff;
   --color-BgDarkPrimary: #1e1e2f;
   --color-BgDarkSecondary: #2a2a40;
@@ -68,8 +69,8 @@
   --popover-foreground: oklch(0.145 0 0);
   --primary: #0874ed;
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: #6366f1;
-  --secondary-foreground: oklch(0.205 0 0);
+  --secondary: gray;
+  --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
   --accent: #0874ed;

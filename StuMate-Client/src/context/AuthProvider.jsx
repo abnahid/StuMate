@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -52,24 +53,21 @@ const AuthProvider = ({ children }) => {
 
   const signOutUser = () => {
     setLoading(true);
-    localStorage.removeItem("accessToken"); // Always remove token on sign out
+    localStorage.removeItem("accessToken");
     return signOut(auth);
   };
 
   const updateUserProfile = (name, photo) => {
     const updateData = {};
 
-    // Only include displayName if it is a valid string
     if (name && typeof name === "string") {
       updateData.displayName = name;
     }
 
-    // Only include photoURL if it is a valid string
     if (photo && typeof photo === "string") {
       updateData.photoURL = photo;
     }
 
-    // Ensure at least one field is being updated
     if (Object.keys(updateData).length === 0) {
       throw new Error("No valid fields to update.");
     }
@@ -82,32 +80,48 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
+      setUser(null); // reset first
 
       if (currentUser?.email) {
         try {
-          const userInfo = { email: currentUser.email };
-          const res = await axiosPublic.post("/jwt", userInfo);
+          // 1. Request JWT
+          const res = await axiosPublic.post("/jwt", { email: currentUser.email });
           const token = res?.data?.token;
 
           if (token) {
             localStorage.setItem("accessToken", token);
+
+            // 2. Fetch user profile from backend
+            const userRes = await axiosPublic.get(`/users/${currentUser.email}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (userRes.data) {
+              // merge firebase + backend data
+              setUser({
+                ...currentUser,
+                ...userRes.data,
+              });
+            } else {
+              setUser(currentUser); // fallback
+            }
           }
         } catch (err) {
-          console.error("JWT token request failed:", err);
+          console.error("User fetch or JWT failed:", err);
           localStorage.removeItem("accessToken");
+          setUser(currentUser); // fallback
         }
       } else {
-        // No user, clear token
         localStorage.removeItem("accessToken");
+        setUser(null);
       }
 
-      // Set loading false after checking everything
       setLoading(false);
     });
 
     return () => unsubscribe();
   }, [axiosPublic]);
+
 
   const authInfo = {
     createUser,

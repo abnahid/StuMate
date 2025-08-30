@@ -1,128 +1,106 @@
-
 import {
-  IconBook2,
-  IconCalendar,
-  IconClock,
-  IconCurrencyDollar,
-  IconDashboard,
-  IconHelp,
-  IconReport,
-  IconSettings
+  IconBook2, IconCalendar, IconClock, IconCurrencyDollar, IconDashboard,
+  IconHelp, IconReport, IconSettings
 } from "@tabler/icons-react";
-
 import { BookMarked } from "lucide-react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { AuthContext } from "../context/AuthProvider";
+import ThemeContext from "../context/ThemeContext";
 import { NavMain } from "./nav-main";
 import { NavSecondary } from "./nav-secondary";
 import { NavUser } from "./nav-user";
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
+  Sidebar, SidebarContent, SidebarFooter, SidebarHeader,
+  SidebarMenu, SidebarMenuButton, SidebarMenuItem
 } from "./ui/sidebar";
 
-// 🎓 Sidebar Data (Student Project) - Updated
-const data = {
-  user: {
-    name: "John Doe",
-    email: "john@student.edu",
-    avatar: "/avatars/student.jpg",
-  },
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/dashboard/userHome",
-      icon: IconDashboard,
-    },
-    {
-      title: "Schedule",
-      url: "/dashboard/schedule",
-      icon: IconCalendar,
-    },
-    {
-      title: "Budget",
-      url: "/dashboard/budget",
-      icon: IconCurrencyDollar,
-    },
-    {
-      title: "Study Planner",
-      url: "/dashboard/planner",
-      icon: IconBook2,
-    },
-    {
-      title: "Exam Prep",
-      url: "/dashboard/exam-prep",
-      icon: IconReport,
-    },
-    {
-      title: "Focus Mode",
-      url: "/dashboard/focus",
-      icon: IconClock,
-    },
-    { url: '/dashboard/journal', title: 'Study Journal', icon: BookMarked },
-  ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "/dashboard/settings",
-      icon: IconSettings,
-    },
-    {
-      title: "Get Help",
-      url: "/help",
-      icon: IconHelp,
-    },
-  ],
-}
+// Sidebar navigation data only
+const navMain = [
+  { title: "Dashboard", url: "/dashboard/userHome", icon: IconDashboard },
+  { title: "Schedule", url: "/dashboard/schedule", icon: IconCalendar },
+  { title: "Budget", url: "/dashboard/budget", icon: IconCurrencyDollar },
+  { title: "Study Planner", url: "/dashboard/planner", icon: IconBook2 },
+  { title: "Exam Prep", url: "/dashboard/exam-prep", icon: IconReport },
+  { title: "Focus Mode", url: "/dashboard/focus", icon: IconClock },
+  { title: 'Study Journal', url: '/dashboard/journal', icon: BookMarked },
+];
+const navSecondary = [
+  { title: "Settings", url: "/dashboard/settings", icon: IconSettings },
+  { title: "Get Help", url: "/help", icon: IconHelp },
+];
 
-// ✨ Updated: UI Button state for active navigation
-export function AppSidebar({ ...props }) {
+export function AppSidebar(props) {
   const location = useLocation();
+  const { user, signOutUser } = useContext(AuthContext); // Get user from AuthContext
+  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
 
-  const isActive = (url) => {
-    // Consider exact match or partial for subroutes
-    return location.pathname === url || location.pathname.startsWith(url + "/");
+  // Profile dropdown logic (if needed)
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const profileRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setIsProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    if (signOutUser) {
+      signOutUser();
+    } else {
+      console.log("Logging out...");
+    }
   };
 
+  const isActive = (url) =>
+    location.pathname === url ||
+    location.pathname.startsWith(url + "/");
+
   return (
-    <SidebarProvider>
-      <Sidebar collapsible="offcanvas" {...props}>
-        {/* 🔹 Header with brand name */}
-        <SidebarHeader>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
-                className="data-[slot=sidebar-menu-button]:!p-1.5"
-                data-active={isActive("/dashboard") ? "true" : undefined}
-              >
-                <Link to="/dashboard" className="flex items-center gap-2">
-                  <IconDashboard className="!size-5" />
-                  <span className="text-base font-semibold">Student Portal</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarHeader>
+    <Sidebar collapsible="offcanvas" {...props}>
+      {/* Header */}
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              className="data-[slot=sidebar-menu-button]:!p-1.5"
+              data-active={isActive("/dashboard/userHome") ? "true" : undefined}
+            >
+              <Link to="/dashboard" className="flex items-center gap-2">
+                <IconDashboard className="!size-5" />
+                <span className="text-base font-semibold">Student Portal</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
 
-        {/* 🔹 Sidebar Content */}
-        <SidebarContent>
-          <NavMain items={data.navMain} />
+      {/* Sidebar Content */}
+      <SidebarContent>
+        <NavMain items={navMain} />
+        <NavSecondary items={navSecondary} className="mt-auto" />
+      </SidebarContent>
 
-          <NavSecondary items={data.navSecondary} className="mt-auto" />
-
-        </SidebarContent>
-
-        {/* 🔹 User Footer */}
-        <SidebarFooter>
-          <NavUser user={data.user} />
-        </SidebarFooter>
-      </Sidebar>
-    </SidebarProvider>
-  )
+      {/* User Footer - get user from AuthContext */}
+      <SidebarFooter>
+        <NavUser
+          user={user}
+          onLogout={handleLogout}
+          isProfileOpen={isProfileOpen}
+          setIsProfileOpen={setIsProfileOpen}
+          profileRef={profileRef}
+          isDarkMode={isDarkMode}
+          toggleTheme={toggleTheme}
+        />
+      </SidebarFooter>
+    </Sidebar>
+  );
 }
