@@ -2,7 +2,6 @@ import PrivateRoute from "@/context/PrivateRoute";
 
 import ContactPage from "@/Page/ContactPage";
 
-import Home from "@/Page/Home/Home";
 import LoginPage from "@/Page/LoginPage";
 import Register from "@/Page/Register";
 import UpcomingPage from "@/Page/UpcomingPage";
@@ -31,6 +30,7 @@ import { HelpPage } from "../Page/Dashboard/UserHome/HelpPage";
 import { StudyJournal } from "../Page/Dashboard/UserHome/journal/StudyJournal";
 import { PlannerBoard } from "../Page/Dashboard/UserHome/planner/PlannerBoard";
 import { ScheduleView } from "../Page/Dashboard/UserHome/schedule/ScheduleView";
+import HeroHome from "../Page/Home/HeroHome";
 
 const router = createBrowserRouter([
     {
@@ -38,7 +38,7 @@ const router = createBrowserRouter([
         element: <MainLayout />,
         errorElement: <ErrorPage />,
         children: [
-            { path: "/", element: <Home /> },
+            { path: "/", element: <HeroHome /> },
             { path: "/about-us", element: <AboutPage /> },
             { path: "/contact-us", element: <ContactPage /> },
             { path: "/login", element: <LoginPage /> },

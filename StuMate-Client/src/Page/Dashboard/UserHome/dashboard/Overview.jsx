@@ -136,7 +136,7 @@ export function Overview() {
                     title="Money Spent"
                     value={`$${moneySpentThisWeek.toFixed(2)}`}
                     icon={Wallet}
-                    color="purple"
+                    color="red"
                 />
                 <StatCard
                     title="Tasks Completed"
@@ -148,19 +148,19 @@ export function Overview() {
                     title="Focus Time Today"
                     value={`${focusTimeToday} min`}
                     icon={Timer}
-                    color="sky"
+                    color="blue"
                 />
                 <StatCard
                     title="Practice Questions"
                     value={questionsPracticedThisWeek.toString()}
                     icon={BookOpenCheck}
-                    color="blue"
+                    color="purple"
                 />
                 <StatCard
                     title="Journal Entries"
                     value={journalEntriesThisWeek.toString()}
                     icon={BookMarked}
-                    color="red"
+                    color="sky"
                 />
             </div>
 

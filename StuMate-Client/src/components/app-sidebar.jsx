@@ -29,9 +29,8 @@ export function AppSidebar(props) {
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
-      {/* Header */}
       <SidebarHeader>
-        <Link to="/dashboard">
+        <Link to="/">
           <img src="/assets/SVG/logo.svg" alt="StuMate" className="h-12" />
         </Link>
       </SidebarHeader>
