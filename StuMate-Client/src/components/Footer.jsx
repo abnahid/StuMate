@@ -11,9 +11,9 @@ const defaultFooterData = {
         description: "Innovating for a better tomorrow. We deliver high-quality solutions.",
     },
     socialLinks: {
-        github: "https://github.com",
-        twitter: "https://twitter.com",
-        linkedin: "https://linkedin.com",
+        github: "https://github.com/abnahid",
+        twitter: "https://twitter.com/@xahid_420",
+        linkedin: "https://www.linkedin.com/in/ajnahid",
     },
     menus: [
         {

@@ -1,6 +1,7 @@
 import Navbar from "../../components/Navbar";
 import CodeDisplay from "./CodeDisplay";
 import Hero from "./Home";
+import Testimonial from "./Testimonial";
 
 export default function HeroHome() {
     return (
@@ -30,6 +31,8 @@ export default function HeroHome() {
                 <Hero />
             </main>
             <CodeDisplay />
+
+            <Testimonial />
         </div>
     );
 }

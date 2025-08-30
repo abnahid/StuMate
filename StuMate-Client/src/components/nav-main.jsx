@@ -24,15 +24,17 @@ export function NavMain({ items, pathname }) {
                 <Link to={item.url}>
                   <SidebarMenuButton
                     tooltip={item.title}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg
+                    className={`flex items-center gap-3 px-4 py-2.5 rounded-lg
                       transition-colors duration-150
                       ${isActive
-                        ? "bg-primary text-white font-semibold"
+                        ? "bg-primary text-white font-semibold hover:bg-primary hover:text-white"
                         : "hover:bg-primary dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200 hover:text-white"
                       }
                     `}
                   >
-                    {item.icon && <item.icon className="w-5 h-5" />}
+                    {item.icon && <item.icon
+                      className={`w-6 h-6 flex-shrink-0 transition-transform duration-200 ${isActive ? "scale-110" : "group-hover:scale-105"
+                        }`} />}
                     <span>{item.title}</span>
                   </SidebarMenuButton>
                 </Link>
