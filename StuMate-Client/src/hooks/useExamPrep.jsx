@@ -3,6 +3,7 @@ import useAuth from './useAuth';
 import useAxiosPublic from './useAxiosPublic';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
 const fetchPracticeSessions = async (axiosPublic, email) => {
     const response = await axiosPublic.get(`/practice-sessions/${email}`);
     return response.data;
@@ -32,6 +33,11 @@ export function useExamPrep() {
         mutationFn: (newSession) => addPracticeSessionFn(axiosPublic, newSession, user.email),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: endpoint });
+            queryClient.invalidateQueries({ queryKey: ['classes', user?.email] });
+            queryClient.invalidateQueries({ queryKey: ['transactions', user?.email] });
+            queryClient.invalidateQueries({ queryKey: ['tasks', user?.email] });
+            queryClient.invalidateQueries({ queryKey: ['focus-sessions', user?.email] });
+            queryClient.invalidateQueries({ queryKey: ['journals', user?.email] });
         },
     });
 

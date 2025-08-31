@@ -25,6 +25,7 @@ import Plan from "../Page/Dashboard/Settings/Plan";
 import { BudgetTracker } from "../Page/Dashboard/UserHome/budget/BudgetTracker";
 import { Overview } from "../Page/Dashboard/UserHome/dashboard/Overview";
 import ExamGenerator from "../Page/Dashboard/UserHome/exam/ExamGenerator";
+import { QuizHistory } from "../Page/Dashboard/UserHome/exam/QuizHistory";
 import { FocusTimer } from "../Page/Dashboard/UserHome/focus/FocusTimer";
 import { HelpPage } from "../Page/Dashboard/UserHome/HelpPage";
 import { StudyJournal } from "../Page/Dashboard/UserHome/journal/StudyJournal";
@@ -65,6 +66,7 @@ const router = createBrowserRouter([
             { path: "focus", element: <FocusTimer /> },
             { path: "journal", element: <StudyJournal /> },
             { path: "exam-prep", element: <ExamGenerator /> },
+            { path: "exam-history", element: <QuizHistory /> },
             { path: "help", element: <HelpPage /> },
 
             // Settings (for both user/admin)
