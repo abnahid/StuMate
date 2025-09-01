@@ -1,11 +1,18 @@
-const express = require("express");
-const cors = require("cors");
-const jwt = require("jsonwebtoken");
-const app = express();
-require("dotenv").config();
+import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
+import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
+dotenv.config();
+
+import questionsRoutes from "./routes/questions.js"; // note the .js extension
+
+import { MongoClient, ObjectId, ServerApiVersion } from "mongodb";
+
+const app = express();
 const port = process.env.PORT || 5012;
-const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+
 
 // Middleware
 app.use(
@@ -54,10 +61,16 @@ const client = new MongoClient(uri, {
   },
 });
 
+mongoose.connect(uri)
+  .then(() => console.log("✅ MongoDB connected successfully"))
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
+
 async function run() {
   try {
     // await client.connect(); // Recommended to connect once
     const db = client.db("StuMateDB");
+
+
 
     console.log("🛰️  Hey Cortana: MongoDB Atlas connection established...");
     console.log("✅ Database Connected — StuMateDB is ready to serve 🚀");
@@ -69,6 +82,9 @@ async function run() {
     const tasksCollection = db.collection("tasks");
     const focusSessionsCollection = db.collection("focusSessions");
     const practiceSessionsCollection = db.collection("practiceSessions");
+    const journalsCollection = db.collection("journals");
+    const postsCollection = db.collection("posts");
+    const commentsCollection = db.collection("comments");
 
 
     app.get("/api", (req, res) => {
@@ -76,24 +92,67 @@ async function run() {
     });
 
 
-    // 🧑‍🎓 Users
+    //  Users
     app.get("/api/users", async (req, res) => {
-      const result = await usersCollection.find().toArray();
-      res.send(result);
+      const users = await usersCollection.find();
+      res.send(users);
+    });
+
+    app.get("/api/users/:email", async (req, res) => {
+      const user = await usersCollection.findOne({ email: req.params.email });
+      res.send(user);
     });
 
     app.post("/api/users", async (req, res) => {
-      const user = req.body;
-      const query = { email: user.email };
-      const existingUser = await usersCollection.findOne(query);
-      if (existingUser) return res.send({ message: "User already exists", insertedId: null });
+      try {
+        const user = req.body;
+        const query = { email: user.email };
 
-      user.role = user.role || "student";
-      const result = await usersCollection.insertOne(user);
-      res.send(result);
+        const existingUser = await usersCollection.findOne(query);
+        if (existingUser) {
+          return res.send({ message: "User already exists", insertedId: null });
+        }
+
+        user.role = user.role || "student";
+        const result = await usersCollection.insertOne(user);
+
+        res.send(result);
+      } catch (err) {
+        console.error("Error inserting user:", err);
+        res.status(500).send({ message: "Internal server error" });
+      }
     });
 
-    // 📅 Class Schedule
+
+    app.patch("/api/users/:email", async (req, res) => {
+      try {
+        const email = req.params.email;
+        const updatedUser = req.body;
+
+        const filter = { email };
+        const updateDoc = { $set: {} };
+
+        for (const [key, value] of Object.entries(updatedUser)) {
+          if (key !== "_id" && value !== undefined && value !== null) {
+            updateDoc.$set[key] = value;
+          }
+        }
+
+        const result = await usersCollection.updateOne(filter, updateDoc);
+
+        if (result.matchedCount === 0) {
+          return res.status(404).send({ success: false, message: "User not found" });
+        }
+
+        res.send({ success: true, message: "User updated successfully" });
+      } catch (err) {
+        console.error(err);
+        res.status(500).send({ success: false, message: "Internal server error" });
+      }
+    });
+
+
+    //  Class Schedule
     app.get("/api/classes/:email", async (req, res) => {
       const result = await classesCollection.find({ email: req.params.email }).toArray();
       res.send(result);
@@ -108,7 +167,7 @@ async function run() {
     app.put("/api/classes/:id", async (req, res) => {
       const id = req.params.id;
       const classData = req.body;
-      delete classData._id; // Do not update the _id
+      delete classData._id;
       const result = await classesCollection.updateOne({ _id: new ObjectId(id) }, { $set: classData });
       res.send(result);
     });
@@ -118,7 +177,7 @@ async function run() {
       res.send(result);
     });
 
-    // 💰 Budget Tracker (Transactions)
+    //  Budget Tracker (Transactions)
     app.get("/api/transactions/:email", async (req, res) => {
       const result = await transactionsCollection.find({ email: req.params.email }).toArray();
       res.send(result);
@@ -143,7 +202,7 @@ async function run() {
       res.send(result);
     });
 
-    // 📖 Study Planner (Tasks)
+    // Study Planner (Tasks)
     app.get("/api/tasks/:email", async (req, res) => {
       const result = await tasksCollection.find({ email: req.params.email }).toArray();
       res.send(result);
@@ -177,7 +236,7 @@ async function run() {
       res.send(result);
     });
 
-    // 🎯 Focus Sessions
+    //  Focus Sessions
     app.get("/api/focus-sessions/:email", async (req, res) => {
       const result = await focusSessionsCollection.find({ email: req.params.email }).toArray();
       res.send(result);
@@ -189,7 +248,7 @@ async function run() {
       res.send(result);
     });
 
-    // ✍️ Exam Prep Sessions
+    //  Exam Prep Sessions
     app.get("/api/practice-sessions/:email", async (req, res) => {
       const result = await practiceSessionsCollection.find({ email: req.params.email }).toArray();
       res.send(result);
@@ -198,6 +257,53 @@ async function run() {
     app.post("/api/practice-sessions", async (req, res) => {
       const session = req.body;
       const result = await practiceSessionsCollection.insertOne(session);
+      res.send(result);
+    });
+
+    app.use("/api/questions", questionsRoutes);
+
+    // Study Journal
+    app.get("/api/journals/:email", async (req, res) => {
+      const result = await journalsCollection.find({ email: req.params.email }).toArray();
+      res.send(result);
+    });
+
+    app.post("/api/journals", async (req, res) => {
+      const entry = req.body;
+      const result = await journalsCollection.insertOne(entry);
+      res.send(result);
+    });
+
+
+    // 💬 Community Forum
+    app.get('/api/posts', async (req, res) => {
+      const posts = await postsCollection.find().sort({ createdAt: -1 }).toArray();
+      res.send(posts);
+    });
+
+    app.get('/api/posts/:id', async (req, res) => {
+      const post = await postsCollection.findOne({ _id: new ObjectId(req.params.id) });
+      res.send(post);
+    });
+
+    app.post('/api/posts', async (req, res) => {
+      const post = req.body;
+      post.createdAt = new Date();
+      const result = await postsCollection.insertOne(post);
+      res.send(result);
+    });
+
+    app.get('/api/comments/:postId', async (req, res) => {
+      const comments = await commentsCollection.find({ postId: req.params.postId }).sort({ createdAt: 1 }).toArray();
+      res.send(comments);
+    });
+
+    app.post('/api/comments', async (req, res) => {
+      const comment = req.body;
+      comment.createdAt = new Date();
+      const result = await commentsCollection.insertOne(comment);
+      // Also update comment count on post
+      await postsCollection.updateOne({ _id: new ObjectId(comment.postId) }, { $inc: { commentCount: 1 } });
       res.send(result);
     });
 

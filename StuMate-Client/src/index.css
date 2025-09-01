@@ -57,9 +57,11 @@
   --font-2xl: 1.5rem;
   --font-3xl: 1.875rem;
   --font-4xl: 2.25rem;
+  --shadow-glow: 0 0 15px #c5e0ff;
 }
 
 :root {
+  --BgDashboard: #e9efff;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -92,11 +94,15 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  --gradient-primary: linear-gradient(135deg, #2563eb, #06b6d4);
-  --gradient-secondary: linear-gradient(135deg, #6366f1, #2563eb);
+  --gradient-primary: #6366f1;
+  --gradient-secondary: #2563eb;
 }
 
 .dark {
+  --BgDashboard: #1e1e1e;
+  --BgDarkPrimary: #1e1e2f;
+  --BgDarkSecondary: #2a2a40;
+  --BgDarkAccent: #3d3d5c;
   --background: #1e1e1e;
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -136,5 +142,12 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .radial-dual {
+    background: radial-gradient(var(--primary, #7c3aed) 0%, transparent 70%);
+    opacity: 0.25;
   }
 }

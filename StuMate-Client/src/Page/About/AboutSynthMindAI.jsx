@@ -2,9 +2,9 @@
 const AboutSynthMindAI = () => (
     <header className="bg-gradient-to-r from-dark to-primary-900 text-white py-20">
         <div className=" px-6 py-32 text-center bg-gradient-to-r from-[#6366f1] to-[#2563eb]">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">About SynthMind AI</h1>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">About Stumate</h1>
             <p className="text-xl md:text-2xl max-w-3xl mx-auto opacity-90">
-                Where human creativity meets artificial intelligence to solve tomorrow&apos;s challenges
+                Where student life meets smart technology to make learning effortless
             </p>
         </div>
         {/* Main Content */}
@@ -15,13 +15,13 @@ const AboutSynthMindAI = () => (
                     <div className="md:w-1/2">
                         <h2 className="text-3xl font-bold text-BgPrimary mb-6">Our Story</h2>
                         <p className="text-gray-700 mb-4">
-                            SynthMind AI was founded in 2019 with a radical idea: that artificial intelligence should enhance human decision-making rather than replace it. Our team of neuroscientists and machine learning experts set out to create a new paradigm in AI.
+                            Stumate was created in 2025 with a bold mission: to simplify the daily struggles students face by uniting study, finance, and productivity in one seamless platform. Built by a team of developers and education enthusiasts, the app is designed to empower students to focus on what truly matters — learning and growth.
                         </p>
                         <p className="text-gray-700 mb-4">
-                            Today, we&apos;re recognized as pioneers in cognitive computing, with our technology powering some of the world&apos;s most innovative companies across healthcare, finance, and creative industries.
+                            Today, Stumate is transforming the way students plan their classes, manage budgets, and prepare for exams, serving as an essential companion for learners worldwide.
                         </p>
                         <p className="text-gray-700">
-                            Our name reflects our philosophy - we synthesize human-like understanding with machine precision to create truly intelligent systems.
+                            Our name reflects our vision — we unite students with their ultimate mate, a smart assistant that keeps them organized, motivated, and future-ready.
                         </p>
                     </div>
                     <div className="md:w-1/2">

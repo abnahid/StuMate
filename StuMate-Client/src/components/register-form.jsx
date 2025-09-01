@@ -4,7 +4,6 @@ import { FaCheck, FaGoogle, FaTimes } from "react-icons/fa";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
 import { cn } from "../lib/utils";
 import { AuthContext } from "./../context/AuthProvider";
 import useAxiosPublic from "./../hooks/useAxiosPublic";
@@ -98,7 +97,8 @@ export function RegisterForm({ className, ...props }) {
     const email = form.get("email");
     const password = form.get("password");
 
-    const photoUrl = "https://i.ibb.co/rQr6L83/default-avatar-icon-of-social-media-user-vector.jpg";
+    const photoUrl =
+      "https://i.ibb.co/rQr6L83/default-avatar-icon-of-social-media-user-vector.jpg";
     const createdAt = new Date().toISOString();
 
     if (name.length < 5) {
@@ -132,14 +132,8 @@ export function RegisterForm({ className, ...props }) {
 
             axiosPublic.post("/users", userInfo).then((res) => {
               if (res.data.insertedId) {
-                Swal.fire({
-                  position: "center",
-                  icon: "success",
-                  title: "User created successfully.",
-                  showConfirmButton: false,
-                  timer: 1500,
-                });
-                navigate(location?.state?.from || "/");
+                toast.success("User created successfully 🎉"); // ✅ show toast
+                navigate("/"); // ✅ redirect homepage
               }
             });
           })
@@ -153,6 +147,7 @@ export function RegisterForm({ className, ...props }) {
         toast.error(`Error creating user: ${err.message}`);
       });
   };
+
 
 
   return (

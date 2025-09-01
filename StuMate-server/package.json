@@ -2,6 +2,7 @@
   "name": "matrimony-nexus-server",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,12 +22,17 @@
   "license": "ISC",
   "description": "Backend server for the Matrimony Nexus platform built with Node.js, Express, and MongoDB for handling user authentication, payments, and other functionalities.",
   "dependencies": {
+    "@genkit-ai/googleai": "^1.18.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "genkit": "^1.18.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.12.0",
-    "stripe": "^17.5.0"
+    "mongoose": "^8.18.0",
+    "stripe": "^17.5.0",
+    "uuid": "^11.1.0",
+    "zod": "^3.25.76"
   }
 }

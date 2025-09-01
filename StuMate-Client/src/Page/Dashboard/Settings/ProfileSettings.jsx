@@ -53,7 +53,7 @@ const UserProfile = () => {
   return (
     <div className="w-full min-h-screen flex flex-col items-center pt-10 gap-10">
       {/* Profile Card */}
-      <div className="w-[640px] px-6 py-5 bg-[#f2f3f8] rounded-lg border border-[#e3e5ec] flex flex-col gap-4">
+      <div className="w-[640px] px-6 py-5 bg-card rounded-lg border border-[#e3e5ec] flex flex-col gap-4">
         <ProfileImageUploader
           user={user}
           onChange={handlePhotoChange}
@@ -61,7 +61,7 @@ const UserProfile = () => {
         />
         <hr className="border-[#b9becf]" />
         <div>
-          <h2 className="text-lg font-bold text-[#131314]">{user.name}</h2>
+          <h2 className="text-lg font-bold text-card-foreground">{user.name}</h2>
           <p className="text-sm font-medium text-[#8c94ab]">{user.email}</p>
         </div>
       </div>
@@ -75,7 +75,7 @@ const UserProfile = () => {
             type="text"
             value={user.name}
             onChange={(e) => setUser({ ...user, name: e.target.value })}
-            className="px-3 py-2 bg-white rounded-lg border border-[#e3e5ec] text-sm font-semibold text-[#131314] focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 bg-card rounded-lg border border-[#e3e5ec] text-sm font-semibold text-[#131314] dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter your Name"
           />
         </div>

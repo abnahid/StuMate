@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
 const Button = ({ children, variant = "primary", className = "", to }) => {
     const baseClasses =
@@ -35,12 +36,28 @@ const Button = ({ children, variant = "primary", className = "", to }) => {
     );
 };
 
-import useAuth from "../../hooks/useAuth";
 export default function Hero() {
     const { user } = useAuth();
 
     return (
         <section className="relative z-10 text-center py-16 sm:py-24 px-4">
+            {/* Gradient background ONLY for Hero */}
+            <div className="absolute inset-0 -z-10 pointer-events-none">
+                <div
+                    className="absolute top-[-10rem] left-[-10rem] w-[40rem] h-[40rem] rounded-full blur-3xl"
+                    style={{
+                        background: "radial-gradient(circle at top left, var(--primary, #7c3aed) 0%, transparent 70%)",
+                        opacity: 0.25,
+                    }}
+                />
+                <div
+                    className="absolute bottom-[-10rem] right-[-10rem] w-[40rem] h-[40rem] rounded-full blur-3xl"
+                    style={{
+                        background: "radial-gradient(circle at bottom right, var(--accent, #ff80b5) 0%, transparent 70%)",
+                        opacity: 0.2,
+                    }}
+                />
+            </div>
             <div className="max-w-4xl mx-auto">
                 <span className="inline-block px-4 py-1.5 text-xs font-semibold tracking-wider uppercase 
           text-primary 
@@ -64,7 +81,7 @@ export default function Hero() {
 
                 <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
                     {user ? (
-                        <Button variant="primary" className="w-full sm:w-auto" to="/dashboard">
+                        <Button variant="primary" className="w-full sm:w-auto" to="/dashboard/userHome">
                             Go to Dashboard
                         </Button>
                     ) : (
