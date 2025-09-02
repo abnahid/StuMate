@@ -25,8 +25,8 @@ export function FullscreenButton() {
     };
 
     return (
-        <Button onClick={handleToggleFullscreen} variant="ghost" size="icon">
-            {isFullscreen ? <Minimize className="h-5 w-5" /> : <Maximize className="h-5 w-5" />}
+        <Button onClick={handleToggleFullscreen} variant="ghost" size="icon" className="bg-sidebar rounded-full">
+            {isFullscreen ? <Minimize className="h-10 w-10" /> : <Maximize className="h-10 w-10" />}
             <span className="sr-only">Toggle fullscreen</span>
         </Button>
     );

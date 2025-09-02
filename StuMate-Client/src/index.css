@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-BgPrimary: #0874ed;
+  --color-BgPrimary: #3b82f6;
   --color-BgSecondary: var(--secondary);
   --color-BgDashboard: #e9efff;
   --color-BgMainColor: #ffffff;
@@ -58,6 +58,7 @@
   --font-2xl: 1.5rem;
   --font-3xl: 1.875rem;
   --font-4xl: 2.25rem;
+  --rounded-primary: 10px;
   --shadow-glow: 0 0 15px #c5e0ff;
 }
 

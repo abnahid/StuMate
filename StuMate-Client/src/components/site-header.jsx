@@ -34,6 +34,14 @@ export function SiteHeader() {
 
   const pathname = useLocation().pathname;
   const title = pageTitles[pathname] || 'Dashboard';
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   // Handle dark/light mode
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDarkMode);
@@ -64,11 +72,14 @@ export function SiteHeader() {
       console.log("Logging out...");
     }
   };
+
+
   return (
-    <header className="sticky top-0 z-10 flex items-center gap-4 border-b bg-background px-4 sm:px-6  py-4 dark:bg-gray-900">
-      <div className="flex w-full items-center gap-2 px-4 lg:gap-4 lg:px-6 ">
+    <header className={`sticky top-0 z-10 flex items-center gap-4 bg-background  px-4  py-3.5 mb-6 dark:bg-gray-900 rounded-[16px] ${isScrolled ? "shadow-lg" : ""
+      }`}>
+      <div className="flex w-full items-center gap-2">
         <SidebarTrigger className="md:hidden" />
-        <h1 className="text-lg font-semibold md:text-xl flex-1">{title}</h1>
+        <h1 className="text-lg font-semibold md:text-2xl flex-1">{title}</h1>
         <div className="flex items-center space-x-1 md:space-x-4">
 
           <FullscreenButton />
@@ -76,124 +87,123 @@ export function SiteHeader() {
 
 
           <Button variant="outline"
-            className="shadow-none border-none"
+            className="shadow-none border-none bg-sidebar rounded-full"
             onClick={toggleTheme}
             aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
           >
             {isDarkMode ? (
               <Sun className="h-7 w-7 text-3xl rotate-0 scale-100 transition-all" />
             ) : (
-              <Moon className="h-7 w-7 rotate-0 scale-100 transition-all" />
+              <Moon className="h-10 w-10 rotate-0 scale-100 transition-all" />
             )}
           </Button>
 
-
-        </div>
-
-        {user && (
-          <div className="relative" ref={profileRef}>
-            <button
-              className="flex items-center space-x-3 px-3 py-2 rounded-full bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-800  w-56"
-              onClick={() => setIsProfileOpen((open) => !open)}
-              aria-haspopup="menu"
-              aria-expanded={isProfileOpen}
-              aria-controls="profile-dropdown"
-            >
-              {/* Avatar */}
-              <div
-                className={`h-10 w-10 rounded-full border-2 overflow-hidden flex-shrink-0
-          ${isDarkMode ? "border-purple-600" : "border-purple-400"}`}
+          {user && (
+            <div className="relative" ref={profileRef}>
+              <button
+                className="flex items-center gap-2  rounded-full bg-white dark:bg-gray-800 dark:hover:bg-gray-800 w-48"
+                onClick={() => setIsProfileOpen((open) => !open)}
+                aria-haspopup="menu"
+                aria-expanded={isProfileOpen}
+                aria-controls="profile-dropdown"
               >
-                {user.photoURL ? (
-                  <img
-                    src={user.photoURL}
-                    alt={user.name || "User"}
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <div
-                    className={`h-full w-full flex items-center justify-center
-              ${isDarkMode ? "bg-purple-800" : "bg-purple-600"} text-white font-bold`}
-                  >
-                    {(user.name?.charAt(0) || user.email?.charAt(0) || "U").toUpperCase()}
-                  </div>
-                )}
-              </div>
-
-              {/* User Info */}
-              <div className="hidden md:block flex-1 text-left">
-                <p className="font-medium text-sm truncate ">{user.name || "User"}</p>
-                <p
-                  className={`text-xs truncate ${isDarkMode ? "text-gray-400" : "text-gray-500"
-                    }`}
-                >
-                  {user.role || "Student"}
-                </p>
-              </div>
-
-              {/* Dropdown Arrow */}
-              <ChevronDown
-                className={`h-4 w-4 transition-transform duration-200 flex-shrink-0
-          ${isProfileOpen ? "rotate-180" : ""}
-          ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}
-              />
-            </button>
-
-            {/* Dropdown */}
-            {isProfileOpen && (
-              <div
-                id="profile-dropdown"
-                className={`absolute right-0 mt-2 w-56 rounded-lg shadow-[0px_4px_10px_rgba(0,0,0,0.15)] border border-[#e3e5ec] bg-background p-2 z-50
-          ${isDarkMode ? "bg-gray-800 border border-gray-700" : "bg-gray-100"}`}
-                tabIndex={-1}
-              >
-                {/* Header */}
+                {/* Avatar */}
                 <div
-                  className={`p-3 border-b bg-[#f2f3f8] dark:bg-gray-800 rounded-md ${isDarkMode ? "border-gray-700" : "border-gray-200"
-                    }`}
+                  className="h-10 w-10 rounded-full  overflow-hidden flex-shrink-0"
                 >
-                  <p className="text-sm font-medium truncate">{user.name}</p>
+                  {user.photoURL ? (
+                    <img
+                      src={user.photoURL}
+                      alt={user.name || "User"}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div
+                      className={`h-full w-full flex items-center justify-center
+              ${isDarkMode ? "bg-purple-800" : "bg-purple-600"} text-white font-bold`}
+                    >
+                      {(user.name?.charAt(0) || user.email?.charAt(0) || "U").toUpperCase()}
+                    </div>
+                  )}
+                </div>
+
+                {/* User Info */}
+                <div className="hidden md:block flex-1 text-left">
+                  <p className="font-medium text-sm truncate ">{user.name || "User"}</p>
                   <p
                     className={`text-xs truncate ${isDarkMode ? "text-gray-400" : "text-gray-500"
                       }`}
                   >
-                    {user.email}
+                    {user.role || "Student"}
                   </p>
                 </div>
 
-                {/* Menu Items */}
-                <div className="py-1">
-                  <Link to="/dashboard/userHome">
-                    <button
-                      className={`w-full flex items-center px-4 py-2 text-sm
-                ${isDarkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"}`}
-                    >
-                      <User className="h-4 w-4 mr-2" />
-                      Profile
-                    </button>
-                  </Link>
-                  <Link to="/dashboard/settings">
-                    <button
-                      className={`w-full flex items-center px-4 py-2 text-sm
-                ${isDarkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"}`}
-                    >
-                      <Settings className="h-4 w-4 mr-2" />
-                      Settings
-                    </button>
-                  </Link>
-                  <button
-                    className={`w-full flex items-center px-4 py-2 text-sm
-              ${isDarkMode ? "text-red-400 hover:bg-gray-700" : "text-red-600 hover:bg-gray-100"}`}
-                    onClick={handleLogout}
+                {/* Dropdown Arrow */}
+                <ChevronDown
+                  className={`h-4 w-4 transition-transform duration-200 flex-shrink-0
+          ${isProfileOpen ? "rotate-180" : ""}
+          ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}
+                />
+              </button>
+
+              {/* Dropdown */}
+              {isProfileOpen && (
+                <div
+                  id="profile-dropdown"
+                  className={`absolute right-0 mt-2 w-48 rounded-lg shadow-[0px_4px_10px_rgba(0,0,0,0.15)] border border-[#e3e5ec] bg-background p-2 z-50
+          ${isDarkMode ? "bg-gray-800 border border-gray-700" : "bg-gray-100"}`}
+                  tabIndex={-1}
+                >
+                  {/* Header */}
+                  <div
+                    className={`p-3 border-b bg-[#f2f3f8] dark:bg-gray-800 rounded-md ${isDarkMode ? "border-gray-700" : "border-gray-200"
+                      }`}
                   >
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Log out
-                  </button>
+                    <p className="text-sm font-medium truncate">{user.name}</p>
+                    <p
+                      className={`text-xs truncate ${isDarkMode ? "text-gray-400" : "text-gray-500"
+                        }`}
+                    >
+                      {user.email}
+                    </p>
+                  </div>
+
+                  {/* Menu Items */}
+                  <div className="py-1">
+                    <Link to="/dashboard/userHome">
+                      <button
+                        className={`w-full flex items-center px-4 py-2 text-sm
+                ${isDarkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"}`}
+                      >
+                        <User className="h-4 w-4 mr-2" />
+                        Profile
+                      </button>
+                    </Link>
+                    <Link to="/dashboard/settings">
+                      <button
+                        className={`w-full flex items-center px-4 py-2 text-sm
+                ${isDarkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"}`}
+                      >
+                        <Settings className="h-4 w-4 mr-2" />
+                        Settings
+                      </button>
+                    </Link>
+                    <button
+                      className={`w-full flex items-center px-4 py-2 text-sm
+              ${isDarkMode ? "text-red-400 hover:bg-gray-700" : "text-red-600 hover:bg-gray-100"}`}
+                      onClick={handleLogout}
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Log out
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        )}
+              )}
+            </div>
+          )}
+        </div>
+
+
 
       </div>
     </header>

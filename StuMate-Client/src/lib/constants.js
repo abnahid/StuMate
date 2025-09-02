@@ -37,3 +37,13 @@ export const MOOD_CONFIG = {
     tired: { label: "Tired", icon: Frown, color: "text-red-500" },
     unknown: { label: "Unknown", icon: Smile, color: "text-gray-500" },
 };
+
+export const DAILY_QUOTES = [
+    { title: "One small step starts the journey", subtitle: "Sunday prep makes the week smoother." }, // Sunday
+    { title: "Start early to get ahead in life", subtitle: "Monday sets the tone for success." }, // Monday
+    { title: "Believe in yourself to achieve", subtitle: "Face Tuesday with full confidence." }, // Tuesday
+    { title: "Keep moving forward with strength", subtitle: "Wednesday is for steady progress." }, // Wednesday
+    { title: "Courage and focus keep you going", subtitle: "Thursday is time to reflect ahead." }, // Thursday
+    { title: "What you do today shapes tomorrow", subtitle: "Friday’s effort brings weekend joy." }, // Friday
+    { title: "Every professional was once a newbie", subtitle: "Saturday is for learning and growth." }, // Saturday
+];

@@ -23,7 +23,7 @@ const Dashboard = () => {
       <AppSidebar />
       <SidebarInset>
         <SiteHeader />
-        <main className="p-4 lg:p-6"><Outlet /> </main>
+        <main ><Outlet /> </main>
       </SidebarInset>
     </SidebarProvider>
   );
