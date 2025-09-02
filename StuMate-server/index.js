@@ -67,7 +67,6 @@ mongoose.connect(uri)
 
 async function run() {
   try {
-    // await client.connect(); // Recommended to connect once
     const db = client.db("StuMateDB");
 
 
@@ -104,23 +103,21 @@ async function run() {
     });
 
     app.post("/api/users", async (req, res) => {
-      try {
-        const user = req.body;
-        const query = { email: user.email };
+      const user = req.body;
+      const query = { email: user.email };
+      const existingUser = await usersCollection.findOne(query);
+      if (existingUser) return res.send({ message: "User already exists", insertedId: null });
 
-        const existingUser = await usersCollection.findOne(query);
-        if (existingUser) {
-          return res.send({ message: "User already exists", insertedId: null });
-        }
+      const newUser = {
+        ...user,
+        role: user.role || 'student',
+        university: '',
+        department: '',
+        grade: ''
+      };
 
-        user.role = user.role || "student";
-        const result = await usersCollection.insertOne(user);
-
-        res.send(result);
-      } catch (err) {
-        console.error("Error inserting user:", err);
-        res.status(500).send({ message: "Internal server error" });
-      }
+      const result = await usersCollection.insertOne(newUser);
+      res.send(result);
     });
 
 
@@ -151,6 +148,31 @@ async function run() {
       }
     });
 
+
+    app.put("/api/users/:email", async (req, res) => {
+      const email = req.params.email;
+      const profileData = req.body;
+      const allowedUpdates = {
+        name: profileData.name,
+        university: profileData.university,
+        department: profileData.department,
+        grade: profileData.grade,
+      };
+
+      Object.keys(allowedUpdates).forEach(key => allowedUpdates[key] === undefined && delete allowedUpdates[key]);
+
+      const result = await usersCollection.updateOne({ email }, { $set: allowedUpdates });
+      res.send(result);
+    });
+
+    const verifyAdmin = async (req, res, next) => {
+      const email = req.decoded.email;
+      const user = await usersCollection.findOne({ email: email });
+      if (user?.role !== 'admin') {
+        return res.status(403).send({ message: 'Forbidden access: requires admin role' });
+      }
+      next();
+    }
 
     //  Class Schedule
     app.get("/api/classes/:email", async (req, res) => {
@@ -277,7 +299,12 @@ async function run() {
 
     // 💬 Community Forum
     app.get('/api/posts', async (req, res) => {
-      const posts = await postsCollection.find().sort({ createdAt: -1 }).toArray();
+      const { category } = req.query;
+      let query = {};
+      if (category) {
+        query.category = category;
+      }
+      const posts = await postsCollection.find(query).sort({ createdAt: -1 }).toArray();
       res.send(posts);
     });
 
@@ -288,9 +315,65 @@ async function run() {
 
     app.post('/api/posts', async (req, res) => {
       const post = req.body;
+
+      if (post.category === 'announcements') {
+        const user = await usersCollection.findOne({ email: post.authorEmail });
+        // For simplicity, we'll assign admin role if a user has a specific email.
+        // In a real app, you'd have a proper role field.
+        const isAdmin = user?.role === 'admin' || post.authorEmail === 'admin@stumate.com';
+        if (!isAdmin) {
+          return res.status(403).send({ message: "Forbidden: Only admins can post announcements." });
+        }
+      }
+
       post.createdAt = new Date();
       const result = await postsCollection.insertOne(post);
-      res.send(result);
+      res.send({ ...post, _id: result.insertedId });
+    });
+
+    app.put('/api/posts/:id', async (req, res) => {
+      const id = req.params.id;
+      const postData = req.body;
+
+      const existingPost = await postsCollection.findOne({ _id: new ObjectId(id) });
+      if (!existingPost) {
+        return res.status(404).send({ message: "Post not found" });
+      }
+      // Basic check to ensure only owners can edit. In a real app, use verifyToken.
+      if (existingPost.authorEmail !== postData.authorEmail) {
+        return res.status(403).send({ message: "Forbidden: You can only edit your own posts." });
+      }
+
+      delete postData._id;
+      const result = await postsCollection.updateOne({ _id: new ObjectId(id) }, { $set: postData });
+      const updatedPost = await postsCollection.findOne({ _id: new ObjectId(id) });
+      res.send(updatedPost);
+    });
+
+    app.delete('/api/posts/:id', async (req, res) => {
+      const id = req.params.id;
+      // In a real app, you'd get the email from the verified JWT token
+      const userEmail = req.body.email; // This is insecure for a real app.
+
+      const postToDelete = await postsCollection.findOne({ _id: new ObjectId(id) });
+      if (!postToDelete) return res.status(404).send({ message: "Post not found" });
+
+      const user = await usersCollection.findOne({ email: userEmail });
+      const isAdmin = user?.role === 'admin' || userEmail === 'admin@stumate.com';
+
+      // Only allow deletion if user is the owner or an admin
+      if (postToDelete.authorEmail !== userEmail && !isAdmin) {
+        return res.status(403).send({ message: "Forbidden: You can only delete your own posts." });
+      }
+
+      const result = await postsCollection.deleteOne({ _id: new ObjectId(id) });
+
+      if (result.deletedCount > 0) {
+        await commentsCollection.deleteMany({ postId: id });
+        res.send({ ...postToDelete, deleted: true });
+      } else {
+        res.status(500).send({ message: "Failed to delete post" });
+      }
     });
 
     app.get('/api/comments/:postId', async (req, res) => {
@@ -302,14 +385,14 @@ async function run() {
       const comment = req.body;
       comment.createdAt = new Date();
       const result = await commentsCollection.insertOne(comment);
-      // Also update comment count on post
       await postsCollection.updateOne({ _id: new ObjectId(comment.postId) }, { $inc: { commentCount: 1 } });
-      res.send(result);
+      res.send({ ...comment, _id: result.insertedId });
     });
 
-
-  } catch (error) {
-    console.error("Error connecting to MongoDB or setting up routes:", error);
+  } catch (e) {
+    console.error(e);
+  } finally {
+    console.log("Always runs");
   }
 }
 run().catch(console.dir);

@@ -38,6 +38,7 @@ export function useExamPrep() {
             queryClient.invalidateQueries({ queryKey: ['tasks', user?.email] });
             queryClient.invalidateQueries({ queryKey: ['focus-sessions', user?.email] });
             queryClient.invalidateQueries({ queryKey: ['journals', user?.email] });
+            queryClient.invalidateQueries({ queryKey: ['profile', user?.email] });
         },
     });
 

@@ -18,9 +18,10 @@ export function NavSecondary({
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild>
-                <a href={item.url}>
-                  <item.icon />
-                  <span>{item.title}</span>
+                <a href={item.url} className="flex items-center gap-2  py-3.5 rounded-lg
+                      transition-colors duration-150">
+                  <item.icon className="w-6 h-6 flex-shrink-0 transition-transform duration-200" />
+                  <span className="font-medium">{item.title}</span>
                 </a>
               </SidebarMenuButton>
             </SidebarMenuItem>

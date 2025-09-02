@@ -61,19 +61,19 @@ const Footer = () => {
                         </p>
                         <div className="flex space-x-5 pt-2 justify-center md:justify-start">
                             {socialLinks?.github && (
-                                <a href={socialLinks.github} target="_blank" rel="noreferrer" className="hover:opacity-80">
+                                <Link to={socialLinks.github} target="_blank" rel="noreferrer" className="hover:opacity-80">
                                     <FaGithub className="w-6 h-6 hover:text-color-BgDarkAccent transition-colors" />
-                                </a>
+                                </Link>
                             )}
                             {socialLinks?.twitter && (
-                                <a href={socialLinks.twitter} target="_blank" rel="noreferrer" className="hover:opacity-80">
+                                <Link to={socialLinks.twitter} target="_blank" rel="noreferrer" className="hover:opacity-80">
                                     <FaTwitter className="w-6 h-6 hover:text-color-BgDarkAccent transition-colors" />
-                                </a>
+                                </Link>
                             )}
                             {socialLinks?.linkedin && (
-                                <a href={socialLinks.linkedin} target="_blank" rel="noreferrer" className="hover:opacity-80">
+                                <Link to={socialLinks.linkedin} target="_blank" rel="noreferrer" className="hover:opacity-80">
                                     <FaLinkedin className="w-6 h-6 hover:text-color-BgDarkAccent transition-colors" />
-                                </a>
+                                </Link>
                             )}
                         </div>
                     </div>
@@ -88,12 +88,12 @@ const Footer = () => {
                         <ul className="space-y-3">
                             {menu.items?.map((item) => (
                                 <li key={item.name}>
-                                    <a
-                                        href={item.link}
+                                    <Link
+                                        to={item.link}
                                         className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-300"
                                     >
                                         {item.name}
-                                    </a>
+                                    </Link>
                                 </li>
                             ))}
                         </ul>

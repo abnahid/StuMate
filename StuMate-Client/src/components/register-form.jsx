@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { FaCheck, FaGoogle, FaTimes } from "react-icons/fa";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { LuEye, LuEyeOff } from "react-icons/lu";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { cn } from "../lib/utils";
 import { AuthContext } from "./../context/AuthProvider";
 import useAxiosPublic from "./../hooks/useAxiosPublic";
@@ -15,8 +15,6 @@ import { Label } from "./ui/label";
 export function RegisterForm({ className, ...props }) {
   const [error, setError] = useState({});
   const navigate = useNavigate();
-  const location = useLocation();
-  const [type, setType] = useState("password");
   const { createUser, updateUserProfile, setUser, googleLogin } =
     useContext(AuthContext);
   const [password, setPassword] = useState("");

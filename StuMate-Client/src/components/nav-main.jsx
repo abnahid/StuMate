@@ -24,7 +24,7 @@ export function NavMain({ items, pathname }) {
                 <Link to={item.url}>
                   <SidebarMenuButton
                     tooltip={item.title}
-                    className={`flex items-center gap-3 px-4 py-2.5 rounded-lg
+                    className={`flex items-center gap-2 py-4.5 rounded-lg
                       transition-colors duration-150
                       ${isActive
                         ? "bg-primary text-white font-semibold hover:bg-primary hover:text-white"
@@ -35,7 +35,7 @@ export function NavMain({ items, pathname }) {
                     {item.icon && <item.icon
                       className={`w-6 h-6 flex-shrink-0 transition-transform duration-200 ${isActive ? "scale-110" : "group-hover:scale-105"
                         }`} />}
-                    <span>{item.title}</span>
+                    <span className="font-medium ">{item.title}</span>
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>

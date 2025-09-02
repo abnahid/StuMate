@@ -1,17 +1,75 @@
 
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "../../../components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from "../../../components/ui/form";
+import { Input } from "../../../components/ui/input";
+import { Skeleton } from "../../../components/ui/skeleton";
 import useAuth from "../../../hooks/useAuth";
+import { useProfile } from "../../../hooks/useProfile";
+import { useToast } from "../../../hooks/useToast";
 import ChangePasswordDialog from "./ChangePasswordDialog";
 import ProfileImageUploader from "./ProfileImageUploader";
 
+const profileSchema = z.object({
+  name: z.string().min(2, 'Name is required.'),
+  university: z.string().optional(),
+  department: z.string().optional(),
+  grade: z.string().optional(),
+});
+
+
+function ProfileSkeleton() {
+  return (
+    <div className="space-y-6">
+      <Skeleton className="h-24 w-full" />
+      <Skeleton className="h-12 w-full" />
+      <Skeleton className="h-12 w-full" />
+      <Skeleton className="h-12 w-full" />
+      <Skeleton className="h-10 w-24" />
+    </div>
+  )
+}
 const UserProfile = () => {
   const { user, setUser } = useAuth();
+  const { toast } = useToast();
+  const { profile, updateProfile, isLoading } = useProfile();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState(""); // "name" or "photo"
   const [formName, setFormName] = useState(user.name);
   const [formPhoto, setFormPhoto] = useState(null);
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
+
+  const form = useForm({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      name: '',
+      university: '',
+      department: '',
+      grade: '',
+    },
+  });
+
+  useEffect(() => {
+    if (profile) {
+      form.reset({
+        name: profile.name || user?.displayName || '',
+        university: profile.university || '',
+        department: profile.department || '',
+        grade: profile.grade || '',
+      });
+    }
+  }, [profile, user, form]);
 
   const handleOpenModal = (type) => {
     setModalType(type);
@@ -50,6 +108,28 @@ const UserProfile = () => {
     alert("Password changed successfully!");
   };
 
+  const handleProfileSave = (values) => {
+    updateProfile.mutate(values, {
+      onSuccess: () => {
+        toast({
+          title: 'Profile Updated',
+          description: 'Your profile information has been saved.',
+        });
+      },
+      onError: () => {
+        toast({
+          variant: 'destructive',
+          title: 'Update Failed',
+          description: 'Could not save your profile information.',
+        });
+      },
+    });
+  };
+
+  if (isLoading) return <ProfileSkeleton />;
+
+
+
   return (
     <div className="w-full min-h-screen flex flex-col items-center pt-10 gap-10">
       {/* Profile Card */}
@@ -69,16 +149,70 @@ const UserProfile = () => {
       {/* Profile Settings Form */}
       <div className="w-[640px] flex flex-col gap-4">
         {/* Name */}
-        <div className="flex flex-col gap-1">
-          <label className="text-xs text-[#595e70]">Your name</label>
-          <input
-            type="text"
-            value={user.name}
-            onChange={(e) => setUser({ ...user, name: e.target.value })}
-            className="px-3 py-2 bg-card rounded-lg border border-[#e3e5ec] text-sm font-semibold text-[#131314] dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter your Name"
-          />
-        </div>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleProfileSave)}
+            className="space-y-6"
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., John Doe" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="university"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>University / School</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., Harvard University" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="department"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Department / Major</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., Computer Science" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="grade"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Grade / Year</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., 2nd Year, 11th Grade" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? 'Saving...' : 'Save Changes'}
+              </Button>
+            </div>
+          </form>
+        </Form>
 
         {/* Email */}
         <div className="flex flex-col gap-1">

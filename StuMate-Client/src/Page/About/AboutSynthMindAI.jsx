@@ -1,7 +1,7 @@
 
 const AboutSynthMindAI = () => (
     <header className="bg-gradient-to-r from-dark to-primary-900 text-white py-20">
-        <div className=" px-6 py-32 text-center bg-gradient-to-r from-[#6366f1] to-[#2563eb]">
+        <div className=" px-6 py-16  text-center bg-gradient-to-r from-[#6366f1] to-[#2563eb]">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">About Stumate</h1>
             <p className="text-xl md:text-2xl max-w-3xl mx-auto opacity-90">
                 Where student life meets smart technology to make learning effortless
@@ -14,13 +14,13 @@ const AboutSynthMindAI = () => (
                 <div className="flex flex-col md:flex-row items-center gap-12">
                     <div className="md:w-1/2">
                         <h2 className="text-3xl font-bold text-BgPrimary mb-6">Our Story</h2>
-                        <p className="text-gray-700 mb-4">
+                        <p className="text-muted-foreground mb-4">
                             Stumate was created in 2025 with a bold mission: to simplify the daily struggles students face by uniting study, finance, and productivity in one seamless platform. Built by a team of developers and education enthusiasts, the app is designed to empower students to focus on what truly matters — learning and growth.
                         </p>
-                        <p className="text-gray-700 mb-4">
+                        <p className="text-muted-foreground mb-4">
                             Today, Stumate is transforming the way students plan their classes, manage budgets, and prepare for exams, serving as an essential companion for learners worldwide.
                         </p>
-                        <p className="text-gray-700">
+                        <p className="text-muted-foreground">
                             Our name reflects our vision — we unite students with their ultimate mate, a smart assistant that keeps them organized, motivated, and future-ready.
                         </p>
                     </div>

@@ -22,7 +22,9 @@ import AboutPage from "@/Page/About/AboutPage";
 import { createBrowserRouter } from "react-router-dom";
 import BillingSettings from "../Page/Dashboard/Settings/BillingSettings";
 import Plan from "../Page/Dashboard/Settings/Plan";
+import { AchievementPage } from "../Page/Dashboard/UserHome/achievements/AchievementSkeleton";
 import { BudgetTracker } from "../Page/Dashboard/UserHome/budget/BudgetTracker";
+import { CommunityPage } from "../Page/Dashboard/UserHome/community/CommunityPage";
 import { Overview } from "../Page/Dashboard/UserHome/dashboard/Overview";
 import ExamGenerator from "../Page/Dashboard/UserHome/exam/ExamGenerator";
 import { QuizHistory } from "../Page/Dashboard/UserHome/exam/QuizHistory";
@@ -68,6 +70,8 @@ const router = createBrowserRouter([
             { path: "exam-prep", element: <ExamGenerator /> },
             { path: "exam-history", element: <QuizHistory /> },
             { path: "help", element: <HelpPage /> },
+            { path: "community", element: <CommunityPage /> },
+            { path: "achievements", element: <AchievementPage /> },
 
             // Settings (for both user/admin)
             {

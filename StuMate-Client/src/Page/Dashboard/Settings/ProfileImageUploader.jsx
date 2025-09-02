@@ -19,7 +19,7 @@ export default function ProfileImageUploader() {
     const [open, setOpen] = useState(false);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
-    const [profileImage, setProfileImage] = useState(user.photoURL || null);
+    const [profileImage, setProfileImage] = useState(user.photoUrl || null);
     const [tempImage, setTempImage] = useState(null);
     const [file, setFile] = useState(null);
     const [uploading, setUploading] = useState(false);
@@ -61,10 +61,10 @@ export default function ProfileImageUploader() {
 
                 // Update local state
                 setProfileImage(imageUrl);
-                setUser({ ...user, photoURL: imageUrl });
+                setUser({ ...user, photoUrl: imageUrl });
 
                 // Update backend
-                await axiosPublic.patch(`/users/${user.email}`, { photoURL: imageUrl });
+                await axiosPublic.patch(`/users/${user.email}`, { photoUrl: imageUrl });
 
                 Swal.fire("Success", "Profile image updated!", "success");
             } else {

@@ -1,7 +1,7 @@
 import ThemeContext from "@/context/ThemeContext";
 import { useContext } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import Footer from "../components/Footer";
+import Footer2 from "../components/Footer2";
 import Navbar from "../components/Navbar";
 
 const MainLayout = () => {
@@ -21,7 +21,7 @@ const MainLayout = () => {
       <div className={`${isDarkMode ? "bg-BgDarkPrimary" : "bg-gray-50"} transition-colors duration-300`}>
         <Outlet />
       </div>
-      {!noHeaderFooter && <Footer />}
+      {!noHeaderFooter && <Footer2 />}
     </div>
   );
 };

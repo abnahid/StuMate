@@ -93,7 +93,7 @@ export function SiteHeader() {
         {user && (
           <div className="relative" ref={profileRef}>
             <button
-              className="flex items-center space-x-3 px-3 py-2 rounded-full bg-gray-100 dark:hover:bg-gray-800  w-56"
+              className="flex items-center space-x-3 px-3 py-2 rounded-full bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-800  w-56"
               onClick={() => setIsProfileOpen((open) => !open)}
               aria-haspopup="menu"
               aria-expanded={isProfileOpen}
@@ -122,7 +122,7 @@ export function SiteHeader() {
 
               {/* User Info */}
               <div className="hidden md:block flex-1 text-left">
-                <p className="font-medium text-sm truncate dark:text-BgDarkPrimary">{user.name || "User"}</p>
+                <p className="font-medium text-sm truncate ">{user.name || "User"}</p>
                 <p
                   className={`text-xs truncate ${isDarkMode ? "text-gray-400" : "text-gray-500"
                     }`}
@@ -143,13 +143,13 @@ export function SiteHeader() {
             {isProfileOpen && (
               <div
                 id="profile-dropdown"
-                className={`absolute right-0 mt-2 w-56 rounded-lg shadow-[0px_4px_10px_rgba(0,0,0,0.15)] border border-[#e3e5ec] bg-white p-2 z-50
+                className={`absolute right-0 mt-2 w-56 rounded-lg shadow-[0px_4px_10px_rgba(0,0,0,0.15)] border border-[#e3e5ec] bg-background p-2 z-50
           ${isDarkMode ? "bg-gray-800 border border-gray-700" : "bg-gray-100"}`}
                 tabIndex={-1}
               >
                 {/* Header */}
                 <div
-                  className={`p-3 border-b bg-[#f2f3f8] rounded-md ${isDarkMode ? "border-gray-700" : "border-gray-200"
+                  className={`p-3 border-b bg-[#f2f3f8] dark:bg-gray-800 rounded-md ${isDarkMode ? "border-gray-700" : "border-gray-200"
                     }`}
                 >
                   <p className="text-sm font-medium truncate">{user.name}</p>
