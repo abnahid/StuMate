@@ -1,9 +1,9 @@
 import {
-  IconBook2,
-  IconClock, IconCurrencyDollar,
-  IconHelp, IconReport, IconSettings
+  IconCurrencyDollar,
+  IconHelp,
+  IconSettings
 } from "@tabler/icons-react";
-import { BookMarked, Calendar, LogOut, Trophy, Users } from "lucide-react";
+import { Book, BookOpen, Calendar, ListTodo, LogOut, Timer, Trophy, Users } from "lucide-react";
 import { RxDashboard } from "react-icons/rx";
 import { Link, useLocation } from "react-router-dom";
 import { NavMain } from "./nav-main";
@@ -17,17 +17,17 @@ const navMain = [
   { title: "Dashboard", url: "/dashboard/userHome", icon: RxDashboard, id: 'tour-dashboard' },
   { title: "Schedule", url: "/dashboard/schedule", icon: Calendar, id: 'tour-schedule' },
   { title: "Budget", url: "/dashboard/budget", icon: IconCurrencyDollar, id: 'tour-budget' },
-  { title: "Study Planner", url: "/dashboard/planner", icon: IconBook2, id: 'tour-planner' },
-  { title: "Exam Prep", url: "/dashboard/exam-prep", icon: IconReport, id: 'tour-exam-prep' },
-  { title: "Focus Mode", url: "/dashboard/focus", icon: IconClock, id: 'tour-focus-mode' },
-  { title: 'Study Journal', url: '/dashboard/journal', icon: BookMarked, id: 'tour-study-journal' },
+  { title: "Study Planner", url: "/dashboard/planner", icon: ListTodo, id: 'tour-planner' },
+  { title: "Exam Prep", url: "/dashboard/exam-prep", icon: BookOpen, id: 'tour-exam-prep' },
+  { title: "Focus Mode", url: "/dashboard/focus", icon: Timer, id: 'tour-focus-mode' },
+  { title: 'Study Journal', url: '/dashboard/journal', icon: Book, id: 'tour-study-journal' },
   { title: 'Achievements', url: '/dashboard/achievements', icon: Trophy, id: 'tour-achievements' },
 ];
 const navSecondary = [
   { title: 'Community', url: '/dashboard/community', icon: Users, id: 'tour-community' },
   { title: "Settings", url: "/dashboard/settings", icon: IconSettings, id: 'tour-settings' },
   { title: "Get Help", url: "/dashboard/help", icon: IconHelp, id: 'tour-help' },
-  { title: "Log Out", icon: LogOut }
+
 ];
 
 export function AppSidebar(props) {
@@ -44,7 +44,12 @@ export function AppSidebar(props) {
       <SidebarContent>
         <NavMain items={navMain} pathname={location.pathname} />
         <NavSecondary items={navSecondary} className="mt-auto" pathname={location.pathname} />
+        <button className="flex items-center gap-3.5  p-2.5 pl-6  rounded-[8px]
+                      transition-colors duration-150">
+          <LogOut className="w-5 h-5 flex-shrink-0 transition-transform duration-200" /><span className="font-medium">Log Out</span>
+        </button>
       </SidebarContent>
+
     </Sidebar>
   );
 }

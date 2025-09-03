@@ -2,7 +2,7 @@
 
 import { getWeekOfMonth, startOfMonth } from 'date-fns';
 import { useMemo } from 'react';
-import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../../components/ui/card';
 
 export function MonthlySpendingChart({ transactions }) {
@@ -47,40 +47,43 @@ export function MonthlySpendingChart({ transactions }) {
     }
 
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Monthly Spending</CardTitle>
-                <CardDescription>Your spending breakdown by week.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <div className="h-[250px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <BarChart
-                            data={data}
-                            margin={{
-                                top: 5,
-                                right: 20,
-                                left: -20,
-                                bottom: 5,
-                            }}
-                        >
-                            <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                            <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                            <Tooltip
-                                contentStyle={{
-                                    backgroundColor: 'hsl(var(--background))',
-                                    border: '1px solid hsl(var(--border))',
-                                    borderRadius: 'var(--radius)',
-                                    color: 'hsl(var(--foreground))'
-                                }}
-                                cursor={{ fill: 'hsl(var(--muted))' }}
-                                formatter={(value) => [`$${value.toFixed(2)}`, 'Spending']}
-                            />
-                            <Bar dataKey="spending" fill="#fecaca" radius={[4, 4, 0, 0]} />
-                        </BarChart>
-                    </ResponsiveContainer>
-                </div>
-            </CardContent>
-        </Card>
+        <div>
+            <p className='font-semibold text-[17px] mb-[19px]'>Monthly Spending</p>
+            <Card className="h-auto p-4 ">
+                <CardHeader className="sr-only">
+                    <CardTitle>Monthly Spending</CardTitle>
+                    <CardDescription>Your spending breakdown by week.</CardDescription>
+                </CardHeader>
+                <CardContent className="p-0">
+                    <div className="h-[335px] w-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart
+                                data={data}
+                                barGap={8}
+                                margin={{ top: 10, right: 12, left: 0, bottom: 0 }}
+                            >
+                                <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                                <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+                                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} domain={[0, 'auto']} width={30} />
+                                <Tooltip
+                                    cursor={false}
+                                    contentStyle={{
+                                        backgroundColor: '#FFE2E4',
+                                        border: '1px solid oklch(0.922 0 0)',
+                                        borderRadius: '0.625rem',
+                                    }}
+                                    labelStyle={{ color: 'oklch(0.145 0 0)' }}
+                                    itemStyle={{ color: '#3b82f6' }}
+                                    formatter={(value) => [`$${value.toFixed(2)}`, 'Spending']}
+                                />
+                                <Bar dataKey="spending" fill="#fecaca" radius={[16, 16, 0, 0]} barSize={24} />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </CardContent>
+            </Card>
+
+
+        </div>
     );
 }

@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 
 
 import { isToday } from 'date-fns';
 import { Award, Clock, Pause, Play, RotateCcw, Target } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '../../../../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../../components/ui/card';
 import { Progress } from '../../../../components/ui/progress';
@@ -22,6 +23,7 @@ export function FocusTimer() {
     const [timeLeft, setTimeLeft] = useState(SESSION_DURATIONS.pomodoro);
     const [isActive, setIsActive] = useState(false);
     const [sessionStartTime, setSessionStartTime] = useState(null);
+    const audioRef = useRef(null);
 
     const handleSessionChange = useCallback((type) => {
         setIsActive(false);
@@ -92,7 +94,7 @@ export function FocusTimer() {
             localStorage.removeItem('focusTimerState');
 
             // Play sound on completion
-            new Audio('/audio/notification.mp3').play();
+            audioRef.current?.play().catch(e => console.error("Error playing sound:", e));
 
             if (sessionStartTime) {
                 addFocusSession.mutate({
@@ -117,6 +119,8 @@ export function FocusTimer() {
         if (Notification.permission !== 'granted') {
             Notification.requestPermission();
         }
+        // Initialize audio object
+        audioRef.current = new Audio('/audio/notification.mp3');
     }, []);
 
     const toggleTimer = () => {
@@ -130,6 +134,16 @@ export function FocusTimer() {
                 active: true,
                 lastSeen: Date.now()
             }));
+            // Play and immediately pause the audio to unlock it for autoplay
+            const playPromise = audioRef.current?.play();
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    audioRef.current?.pause();
+                    audioRef.current.currentTime = 0;
+                }).catch(error => {
+                    console.log("Audio unlock failed, will try again on next interaction.");
+                });
+            }
         } else {
             setIsActive(false);
             localStorage.setItem('focusTimerState', JSON.stringify({

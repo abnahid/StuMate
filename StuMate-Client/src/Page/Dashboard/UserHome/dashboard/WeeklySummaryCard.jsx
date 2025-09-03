@@ -73,8 +73,9 @@ export function WeeklySummaryCard({ focusSessions, tasks, transactions, practice
     ];
 
     return (
+
         <Card>
-            <CardHeader>
+            <CardHeader >
                 <CardTitle className="text-xl font-semibold">Weekly Summary</CardTitle>
                 <CardDescription className="text-sm text-muted-foreground">Keep up the streak!</CardDescription>
             </CardHeader>
@@ -133,7 +134,7 @@ export function WeeklySummaryCard({ focusSessions, tasks, transactions, practice
                 <div className="space-y-4">
                     <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center gap-2">
-                            <Target className="h-5 w-5 text-primary" />
+                            <Target className="h-5 w-5 text-[#22C55E]" />
                             <span className="font-medium">Study Goal</span>
                         </div>
                         <span className="text-muted-foreground font-medium">
@@ -144,8 +145,8 @@ export function WeeklySummaryCard({ focusSessions, tasks, transactions, practice
                     <div className="bg-BgDashboard p-4 rounded-lg flex items-center flex-col text-center">
                         <div className="flex items-center gap-2">
                             <Flame className="h-6 w-6 text-orange-500" />
-                            <p className="text-[25.5px] font-bold">{streaks.current}</p>
-                            <p className="text-[13.6px]text-muted-foreground">days</p>
+                            <p className="text-[25.5px] font-bold text-muted-foreground">{streaks.current}</p>
+                            <p className="text-[13.6px] text-muted-foreground">days</p>
                         </div>
                         <div className='flex items-center gap-6 mt-2'>
                             <p className="text-xs text-muted-foreground">Current Streak</p>

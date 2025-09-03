@@ -205,7 +205,7 @@ export function Overview() {
                         <div className="rounded-[16px] border">
                             <Table className="rounded-t-[16px]">
                                 <TableHeader >
-                                    <TableRow className="bg-[#ECF3FF] hover:bg-[#ECF3FF]/80 ">
+                                    <TableRow className="bg-[#ECF3FF] hover:bg-[#ECF3FF]/80 dark:bg-gray-900 ">
                                         <TableHead className="rounded-tl-[16px] p-3">Task</TableHead>
                                         <TableHead className="p-3">Priority</TableHead>
                                         <TableHead className="rounded-tr-[16px] p-3">Due Date</TableHead>
@@ -243,9 +243,9 @@ export function Overview() {
                         <div className="rounded-[16px] border">
                             <Table>
                                 <TableHeader>
-                                    <TableRow className="bg-[#ECF3FF] hover:bg-[#ECF3FF]/80">
+                                    <TableRow className="bg-[#ECF3FF] hover:bg-[#ECF3FF]/80 dark:bg-gray-900">
                                         <TableHead className="rounded-tl-[16px] p-3">Description</TableHead>
-                                        <TableHead className="text-right rounded-tr-[16px] p-3">Amount</TableHead>
+                                        <TableHead className="text-center rounded-tr-[16px] p-3">Amount</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -255,7 +255,7 @@ export function Overview() {
                                                 <div className="font-medium">{t.description}</div>
                                                 <div className="text-[10px] text-muted-foreground">{t.category}</div>
                                             </TableCell>
-                                            <TableCell className={cn("text-right text-[14px] font-semibold p-3", t.type === 'income' ? 'text-green-500' : 'text-red-500')}>
+                                            <TableCell className={cn("text-center text-[14px] font-semibold p-3", t.type === 'income' ? 'text-green-500' : 'text-red-500')}>
                                                 {t.type === 'income' ? '+' : '-'}${t.amount.toFixed(2)}
                                             </TableCell>
                                         </TableRow>

@@ -1,4 +1,3 @@
-'use client';
 
 import {
     eachDayOfInterval,
@@ -9,17 +8,16 @@ import {
     parseISO,
     startOfWeek,
 } from 'date-fns';
-import { Trash2 } from 'lucide-react';
+import { Edit, Trash2 } from 'lucide-react';
 import {
     AlertDialog,
     AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
-    AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
+    AlertDialogTrigger
 } from '../../../../components/ui/alert-dialog';
 import { Button } from '../../../../components/ui/button';
 import { ScrollArea, ScrollBar } from '../../../../components/ui/scroll-area';
@@ -49,6 +47,7 @@ export function WeekView({ currentDate, onEditEvent }) {
     };
 
     const calculateHeight = () => {
+        // Assuming a 50-minute event duration for display purposes
         return (50 / (24 * 60)) * 100;
     }
 
@@ -68,9 +67,9 @@ export function WeekView({ currentDate, onEditEvent }) {
                 </div>
 
                 {/* Calendar grid */}
-                <div className="col-start-2 grid grid-cols-7 relative">
+                <div className="col-start-2 grid grid-cols-1">
                     {/* Day headers */}
-                    <div className="col-span-7 grid grid-cols-7 sticky top-0 bg-background z-10">
+                    <div className="grid grid-cols-7 sticky top-0 bg-background z-10">
                         {daysInWeek.map((day) => (
                             <div key={day.toString()} className="border-l p-2 text-center h-16 flex flex-col justify-center">
                                 <p className="text-sm font-medium">{format(day, 'E')}</p>
@@ -79,23 +78,18 @@ export function WeekView({ currentDate, onEditEvent }) {
                         ))}
                     </div>
 
-                    {/* Background grid lines */}
-                    <div className="col-span-7 grid grid-cols-7 row-start-1 -z-0 mt-16">
-                        {daysInWeek.map((day, dayIndex) => (
-                            <div key={day.toString()} className={cn("border-l", dayIndex === 0 && "border-l-0")}>
-                                {HOURS.map((hour) => (
-                                    <div key={hour} className="h-16 border-t"></div>
-                                ))}
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Events */}
-                    <div className="col-span-7 grid grid-cols-7 row-start-1 z-0 mt-16">
+                    {/* Background grid lines and Events */}
+                    <div className="grid grid-cols-7 relative">
                         {daysInWeek.map((day, dayIndex) => {
                             const dayEvents = getEventsForDay(day);
                             return (
-                                <div key={day.toString()} className="relative col-start-1" style={{ gridColumnStart: dayIndex + 1 }}>
+                                <div key={day.toString()} className={cn("relative border-l", dayIndex === 0 && "border-l-0")} style={{ gridColumn: dayIndex + 1 }}>
+                                    {/* Background hourly slots */}
+                                    {HOURS.map((hour) => (
+                                        <div key={hour} className="h-16 border-t"></div>
+                                    ))}
+
+                                    {/* Events for this day */}
                                     {dayEvents.map(event => (
                                         <div
                                             key={event._id}
@@ -107,11 +101,13 @@ export function WeekView({ currentDate, onEditEvent }) {
                                                 top: `${calculatePosition(event.time)}%`,
                                                 height: `${calculateHeight()}%`
                                             }}
-                                            onClick={() => onEditEvent(event)}
                                         >
                                             <p className="font-semibold truncate">{event.name}</p>
                                             <p className="text-muted-foreground">{event.time}</p>
-                                            <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity flex items-center">
+                                            <div className="absolute top-1.5 right-1 opacity-0 group-hover:opacity-100 transition-opacity flex items-center">
+                                                <Button variant="ghost" size="icon" className="h-5 w-5" onClick={(e) => { e.stopPropagation(); onEditEvent(event); }}>
+                                                    <Edit className="h-3 w-3" />
+                                                </Button>
                                                 <AlertDialog>
                                                     <AlertDialogTrigger asChild onClick={(e) => e.stopPropagation()}>
                                                         <Button variant="ghost" size="icon" className="h-5 w-5">
@@ -125,12 +121,12 @@ export function WeekView({ currentDate, onEditEvent }) {
                                                                 This action cannot be undone. This will permanently delete this event.
                                                             </AlertDialogDescription>
                                                         </AlertDialogHeader>
-                                                        <AlertDialogFooter>
+                                                        <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2">
                                                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                                                             <AlertDialogAction onClick={() => deleteClass.mutate(event._id)}>
                                                                 Delete
                                                             </AlertDialogAction>
-                                                        </AlertDialogFooter>
+                                                        </div>
                                                     </AlertDialogContent>
                                                 </AlertDialog>
                                             </div>

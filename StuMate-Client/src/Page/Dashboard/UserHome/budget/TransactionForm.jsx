@@ -5,6 +5,7 @@ import { Button } from '../../../../components/ui/button';
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -71,7 +72,7 @@ export function TransactionForm({
 
     function onSubmit(values) {
         if (transaction) {
-            updateTransaction({ ...values, _id: transaction._id });
+            updateTransaction.mutate({ ...values, _id: transaction._id });
         } else {
             addTransaction.mutate(values);
         }
@@ -85,6 +86,9 @@ export function TransactionForm({
                     <DialogTitle>
                         {transaction ? 'Edit Transaction' : 'Add New Transaction'}
                     </DialogTitle>
+                    <DialogDescription>
+                        Fill out the form to add or edit a transaction. Click save when you're done.
+                    </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
@@ -161,22 +165,20 @@ export function TransactionForm({
                                     <FormLabel>Date</FormLabel>
                                     <Popover>
                                         <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button
-                                                    variant={'outline'}
-                                                    className={cn(
-                                                        'w-full pl-3 text-left font-normal',
-                                                        !field.value && 'text-muted-foreground'
-                                                    )}
-                                                >
-                                                    {field.value ? (
-                                                        format(new Date(field.value), 'PPP')
-                                                    ) : (
-                                                        <span>Pick a date</span>
-                                                    )}
-                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                </Button>
-                                            </FormControl>
+                                            <Button
+                                                variant={'outline'}
+                                                className={cn(
+                                                    'w-full pl-3 text-left font-normal',
+                                                    !field.value && 'text-muted-foreground'
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(new Date(field.value), 'PPP')
+                                                ) : (
+                                                    <span>Pick a date</span>
+                                                )}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
                                         </PopoverTrigger>
                                         <PopoverContent className="w-auto p-0" align="start">
                                             <Calendar

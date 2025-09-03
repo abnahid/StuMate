@@ -1,4 +1,4 @@
-import { BrainCircuit, Frown, Meh, Smile, Zap } from 'lucide-react';
+import { BrainCircuit, Frown, Meh, Zap } from 'lucide-react';
 
 export const SUBJECT_COLORS = {
     default: 'border-gray-500',
@@ -31,11 +31,11 @@ export const MOODS = [
 ];
 
 export const MOOD_CONFIG = {
-    focused: { label: "Focused", icon: BrainCircuit, color: "text-green-500" },
-    motivated: { label: "Motivated", icon: Zap, color: "text-blue-500" },
-    distracted: { label: "Distracted", icon: Meh, color: "text-yellow-500" },
-    tired: { label: "Tired", icon: Frown, color: "text-red-500" },
-    unknown: { label: "Unknown", icon: Smile, color: "text-gray-500" },
+    focused: { label: "Focused", icon: "😊", color: "text-green-500", bg: "bg-green-100" },
+    motivated: { label: "Motivated", icon: "😊", color: "text-green-500", bg: "bg-green-100" },
+    distracted: { label: "Distracted", icon: "😐", color: "text-yellow-500", bg: "bg-yellow-100" },
+    tired: { label: "Tired", icon: "😔", color: "text-red-500", bg: "bg-red-100" },
+    unknown: { label: "Unknown", icon: "🙂", color: "text-gray-500", bg: "bg-gray-100" },
 };
 
 export const DAILY_QUOTES = [

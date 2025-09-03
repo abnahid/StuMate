@@ -51,7 +51,7 @@ export function CalendarGrid({ currentDate, onEditEvent }) {
     };
 
     return (
-        <div className="grid grid-cols-7 border-t border-l">
+        <div className="grid grid-cols-7  p-4">
             {WEEK_DAYS.map((day) => (
                 <div key={day} className="border-r border-b p-2 text-center font-bold text-sm text-muted-foreground">
                     {day}

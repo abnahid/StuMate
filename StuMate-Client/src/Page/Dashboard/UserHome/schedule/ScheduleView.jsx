@@ -100,7 +100,7 @@ export function ScheduleView() {
                 </div>
             </div>
 
-            <Card className="overflow-hidden">
+            <Card className="overflow-hidden py-0">
                 {view === 'month' && <CalendarGrid currentDate={currentDate} onEditEvent={handleEdit} />}
                 {view === 'week' && <WeekView currentDate={currentDate} onEditEvent={handleEdit} />}
                 {view === 'day' && <DayView currentDate={currentDate} onEditEvent={handleEdit} />}

@@ -1,6 +1,6 @@
 
 import { format } from 'date-fns';
-import { ArrowDownCircle, ArrowUpCircle, DollarSign, Edit, PlusCircle, Trash2 } from 'lucide-react';
+import { ArrowDownCircle, ArrowUpCircle, ChevronLeft, ChevronRight, DollarSign, Edit, PlusCircle, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import {
     AlertDialog,
@@ -8,10 +8,9 @@ import {
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
-    AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
+    AlertDialogTrigger
 } from '../../../../components/ui/alert-dialog';
 import { Button } from '../../../../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../../components/ui/card';
@@ -25,6 +24,7 @@ import {
 } from '../../../../components/ui/table';
 import { useBudget } from '../../../../hooks/useBudget';
 import { cn } from '../../../../lib/utils';
+import { StatCard } from '../dashboard/StatCard';
 import { BudgetChart } from './BudgetChart';
 import { TransactionForm } from './TransactionForm';
 
@@ -32,6 +32,8 @@ export function BudgetTracker() {
     const { transactions, deleteTransaction } = useBudget();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [selectedTransaction, setSelectedTransaction] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
 
     const handleAdd = () => {
         setSelectedTransaction(null);
@@ -51,6 +53,16 @@ export function BudgetTracker() {
         .reduce((acc, t) => acc + t.amount, 0);
     const balance = totalIncome - totalExpenses;
 
+    const sortedTransactions = [...transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentTransactions = sortedTransactions.slice(indexOfFirstItem, indexOfLastItem);
+
+    const totalPages = Math.ceil(sortedTransactions.length / itemsPerPage);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
@@ -61,37 +73,24 @@ export function BudgetTracker() {
             </div>
 
             <div className="grid gap-4 md:grid-cols-3">
-                <Card className="border-green-500 bg-green-500/10">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-green-700">Total Income</CardTitle>
-                        <ArrowUpCircle className="h-4 w-4 text-green-700" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-green-700">
-                            ${totalIncome.toFixed(2)}
-                        </div>
-                    </CardContent>
-                </Card>
-                <Card className="border-red-500 bg-red-500/10">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-red-700">Total Expenses</CardTitle>
-                        <ArrowDownCircle className="h-4 w-4 text-red-700" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-red-700">
-                            ${totalExpenses.toFixed(2)}
-                        </div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Balance</CardTitle>
-                        <DollarSign className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className={cn("text-2xl font-bold", balance >= 0 ? 'text-foreground' : 'text-red-500')}>${balance.toFixed(2)}</div>
-                    </CardContent>
-                </Card>
+                <StatCard
+                    title="Total Income"
+                    value={`$${totalIncome.toFixed(2)}`}
+                    icon={ArrowUpCircle}
+                    color="green"
+                />
+                <StatCard
+                    title="Total Expenses"
+                    value={`$${totalExpenses.toFixed(2)}`}
+                    icon={ArrowDownCircle}
+                    color="red"
+                />
+                <StatCard
+                    title="Balance"
+                    value={`$${balance.toFixed(2)}`}
+                    icon={DollarSign}
+                    color="blue"
+                />
             </div>
 
             <div className="grid gap-6 md:grid-cols-5">
@@ -101,66 +100,100 @@ export function BudgetTracker() {
                         <CardDescription>A list of your recent income and expenses.</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Description</TableHead>
-                                    <TableHead>Category</TableHead>
-                                    <TableHead>Date</TableHead>
-                                    <TableHead className="text-right">Amount</TableHead>
-                                    <TableHead className="w-[80px]"></TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {transactions.map((t) => (
-                                    <TableRow key={t._id}>
-                                        <TableCell className="font-medium">{t.description}</TableCell>
-                                        <TableCell>{t.category}</TableCell>
-                                        <TableCell>{format(new Date(t.date), 'MMM d, yyyy')}</TableCell>
-                                        <TableCell
-                                            className={cn(
-                                                'text-right font-semibold',
-                                                t.type === 'income' ? 'text-green-500' : 'text-red-500'
-                                            )}
-                                        >
-                                            {t.type === 'income' ? '+' : '-'}${t.amount.toFixed(2)}
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="flex items-center justify-end gap-1">
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    onClick={() => handleEdit(t)}
-                                                >
-                                                    <Edit className="h-4 w-4" />
-                                                </Button>
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger asChild>
-                                                        <Button variant="ghost" size="icon">
-                                                            <Trash2 className="h-4 w-4 text-destructive" />
-                                                        </Button>
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent>
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                                            <AlertDialogDescription>
-                                                                This action cannot be undone. This will permanently delete this transaction.
-                                                            </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                            <AlertDialogAction onClick={() => deleteTransaction.mutate(t._id)}>
-                                                                Delete
-                                                            </AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-                                            </div>
-                                        </TableCell>
+                        <div className="rounded-[16px] border">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow className="bg-muted/80 hover:bg-muted/80">
+                                        <TableHead className="rounded-tl-[16px] p-3">Description</TableHead>
+                                        <TableHead className="p-3">Category</TableHead>
+                                        <TableHead className="p-3">Date</TableHead>
+                                        <TableHead className="text-right p-3">Amount</TableHead>
+                                        <TableHead className="w-[80px] text-right p-3 rounded-tr-[16px] ">Actions</TableHead>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                </TableHeader>
+                                <TableBody>
+                                    {currentTransactions.length > 0 ? currentTransactions.map((t) => (
+                                        <TableRow key={t._id}>
+                                            <TableCell className="font-normal p-3 text-[14px]">{t.description}</TableCell>
+                                            <TableCell className="p-3">{t.category}</TableCell>
+                                            <TableCell className="p-3">{format(new Date(t.date), 'MMM d, yyyy')}</TableCell>
+                                            <TableCell
+                                                className={cn(
+                                                    'text-right font-semibold',
+                                                    t.type === 'income' ? 'text-green-500' : 'text-red-500'
+                                                )}
+                                            >
+                                                {t.type === 'income' ? '+' : '-'}${t.amount.toFixed(2)}
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className="flex items-center justify-end gap-1">
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={() => handleEdit(t)}
+                                                    >
+                                                        <Edit className="h-4 w-4" />
+                                                    </Button>
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger asChild>
+                                                            <Button variant="ghost" size="icon">
+                                                                <Trash2 className="h-4 w-4 text-destructive" />
+                                                            </Button>
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    This action cannot be undone. This will permanently delete this transaction.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <div className="flex justify-end space-x-2">
+                                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                                <AlertDialogAction onClick={() => deleteTransaction.mutate(t._id)}>
+                                                                    Delete
+                                                                </AlertDialogAction>
+                                                            </div>
+
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    )) : (
+                                        <TableRow>
+                                            <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
+                                                No transactions yet.
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </div>
+                        {totalPages > 1 && (
+                            <div className="flex items-center justify-between pt-4">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => paginate(currentPage - 1)}
+                                    disabled={currentPage === 1}
+                                >
+                                    <ChevronLeft className="mr-2 h-4 w-4" />
+                                    Previous
+                                </Button>
+                                <div className="text-sm text-muted-foreground">
+                                    Page {currentPage} of {totalPages}
+                                </div>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => paginate(currentPage + 1)}
+                                    disabled={currentPage === totalPages}
+                                >
+                                    Next
+                                    <ChevronRight className="ml-2 h-4 w-4" />
+                                </Button>
+                            </div>
+                        )}
                     </CardContent>
                 </Card>
 

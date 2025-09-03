@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AlertTriangle, BookOpenCheck, History, Loader2, Sparkles } from 'lucide-react';
+import { AlertTriangle, History, Loader2, Sparkles } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
@@ -12,7 +12,6 @@ import { Input } from '../../../../components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../../components/ui/select';
 import useAuth from '../../../../hooks/useAuth';
 import useAxiosPublic from '../../../../hooks/useAxiosPublic';
-import { cn } from '../../../../lib/utils';
 import { QuizDisplay } from './QuizDisplay';
 
 const formSchema = z.object({
@@ -25,7 +24,6 @@ const formSchema = z.object({
 export function ExamGenerator() {
     const [isPending, startTransition] = useTransition();
     const [quizData, setQuizData] = useState(null);
-    const [examSessionId, setExamSessionId] = useState(null);
     const [error, setError] = useState(null);
     const [view, setView] = useState('form');
     const axiosPublic = useAxiosPublic();
@@ -54,7 +52,6 @@ export function ExamGenerator() {
                     throw new Error("The AI failed to generate questions. Please try a different topic.");
                 }
                 setQuizData({ ...res, settings: values });
-                setExamSessionId(res.examSessionId);
                 setView('quiz');
             } catch (e) {
                 setError(e instanceof Error ? e.message : 'An unknown error occurred.');
@@ -63,90 +60,38 @@ export function ExamGenerator() {
         });
     };
 
-    // Fetch previous questions if retrying
-    const handleRetry = async () => {
-        setError(null);
-        setView('loading');
-        try {
-            const response = await axiosPublic.get('/questions/generate', {
-                params: { email: user?.email, examSessionId }
-            });
-            const questions = response.data;
-            if (!questions || questions.length === 0) {
-                throw new Error("Could not load previous questions.");
-            }
-            setQuizData({
-                questions,
-                examSessionId,
-                settings: quizData.settings, // keep the settings
-            });
-            setView('quiz');
-        } catch (e) {
-            setError(e instanceof Error ? e.message : 'An unknown error occurred.');
-            setView('form');
-        }
-    };
-
     const handleExit = () => {
         setView('form');
         setQuizData(null);
-        setExamSessionId(null);
         setError(null);
-    };
+    }
 
     const renderContent = () => {
         switch (view) {
             case 'loading':
                 return (
-                    <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed text-muted-foreground p-12 space-y-4 h-full">
+                    <div className="flex flex-col items-center justify-center rounded-lg text-muted-foreground p-12 space-y-4 min-h-[50vh]">
                         <Loader2 className="h-8 w-8 animate-spin text-primary" />
                         <p className="font-semibold">Generating your exam questions...</p>
                         <p className="text-sm text-center">This may take a moment. Please wait.</p>
                     </div>
                 );
             case 'quiz':
-                return (
-                    <QuizDisplay
-                        quizData={quizData}
-                        onExit={handleExit}
-                        examSessionId={examSessionId}
-                        onRetry={handleRetry} // <-- pass retry handler
-                    />
-                );
+                return <QuizDisplay quizData={quizData} onExit={handleExit} />;
+
             case 'form':
             default:
                 return (
-                    <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed text-muted-foreground p-12 space-y-4 h-full">
-                        <BookOpenCheck className="h-8 w-8 text-primary" />
-                        <p className="font-semibold">Ready to test your knowledge?</p>
-                        <p className="text-sm text-center">Fill out the form to generate a practice quiz.</p>
-                    </div>
-                );
-        }
-    };
-
-    return (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-            {view === 'form' && (
-                <Card className="lg:col-span-1">
-                    <CardHeader>
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <Sparkles className="h-6 w-6 text-primary" />
-                                <CardTitle>AI Quiz Generator</CardTitle>
-                            </div>
-                            <Button asChild variant="outline" size="sm">
-                                <Link to="/dashboard/exam-history">
-                                    <History className="mr-2 h-4 w-4" />
-                                    View History
-                                </Link>
-                            </Button>
-                        </div>
-                        <CardDescription>Generate a timed, multiple-choice quiz to test your knowledge.</CardDescription>
-                    </CardHeader>
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)}>
-                            <CardContent className="space-y-4">
+                        <form onSubmit={form.handleSubmit(onSubmit)} >
+                            <CardContent className="space-y-4 ">
+                                {error && (
+                                    <Alert variant="destructive">
+                                        <AlertTriangle className="h-4 w-4" />
+                                        <AlertTitle>Error Generating Quiz</AlertTitle>
+                                        <AlertDescription>{error}</AlertDescription>
+                                    </Alert>
+                                )}
                                 <FormField
                                     control={form.control}
                                     name="topic"
@@ -203,7 +148,7 @@ export function ExamGenerator() {
                                             <FormItem>
                                                 <FormLabel>Questions</FormLabel>
                                                 <FormControl>
-                                                    <Input type="number" min="1" max="10" defaultValue={5} {...field} disabled={isPending} />
+                                                    <Input type="number" min="1" max="10" {...field}   {...field} disabled={isPending} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -211,7 +156,7 @@ export function ExamGenerator() {
                                     />
                                 </div>
                             </CardContent>
-                            <CardFooter className="mt-4">
+                            <CardFooter className="mt-6">
                                 <Button type="submit" disabled={isPending} className="w-full">
                                     {isPending ? (
                                         <>
@@ -224,26 +169,32 @@ export function ExamGenerator() {
                             </CardFooter>
                         </form>
                     </Form>
-                </Card>
-            )}
+                );
+        }
+    }
 
-            <div className={cn("min-h-[50vh]", view === 'form' ? "lg:col-span-2" : "lg:col-span-3")}>
-                {error && (
-                    <Alert variant="destructive" className="mb-4">
-                        <AlertTriangle className="h-4 w-4" />
-                        <AlertTitle>Error Generating Quiz</AlertTitle>
-                        <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                )}
-                {renderContent()}
-                {/* Optionally, show the Session ID */}
-                {view === 'quiz' && examSessionId && (
-                    <div className="mt-4 text-xs text-muted-foreground text-center">
-                        Exam Session ID: <span className="font-mono break-all">{examSessionId}</span>
+
+    return (
+        <Card className="lg:col-span-1 max-w-3xl mx-auto">
+            <CardHeader>
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <Sparkles className="h-6 w-6 text-primary" />
+                        <CardTitle>AI Quiz Generator</CardTitle>
                     </div>
-                )}
-            </div>
-        </div>
+                    <Button asChild variant="outline" size="sm">
+                        <Link to="/dashboard/exam-history">
+                            <History className="mr-2 h-4 w-4" />
+                            View History
+                        </Link>
+                    </Button>
+                </div>
+                <CardDescription>Generate a timed, multiple-choice quiz to test your knowledge.</CardDescription>
+            </CardHeader>
+
+            {renderContent()}
+
+        </Card>
     );
 }
 
