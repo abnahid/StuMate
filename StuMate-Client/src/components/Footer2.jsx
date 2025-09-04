@@ -10,9 +10,12 @@ const Footer2 = () => {
                     Got ideas to make student life smarter? <br className="hidden sm:block" />
                     We’d love to hear from you!
                 </h2>
-                <Button className="px-6 py-6 text-lg font-semibold hover:scale-105 transition-all">
-                    Get Started
-                </Button>
+                <Link to="/register">
+                    <Button className="px-6 py-6 text-lg font-semibold hover:scale-105 transition-all">
+                        Get Started
+                    </Button>
+                </Link>
+
             </div>
 
             {/* Middle Section */}

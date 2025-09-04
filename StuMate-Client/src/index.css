@@ -60,6 +60,11 @@
   --font-4xl: 2.25rem;
   --rounded-primary: 10px;
   --shadow-glow: 0 0 15px #c5e0ff;
+  --animate-wiggle: wiggle 2s ease-in-out infinite;
+  --animate-pulseSmooth: pulseSmooth 2.5s ease-in-out infinite;
+  --animate-shimmer: shimmer 2s ease-in-out infinite;
+  --animate-bounceSubtle: bounceSubtle 2s ease-in-out infinite;
+  --animate-rotateSmooth: rotateSmooth 3s ease-in-out infinite;
 }
 
 :root {
@@ -156,5 +161,60 @@
   .radial-dual {
     background: radial-gradient(var(--primary, #7c3aed) 0%, transparent 70%);
     opacity: 0.25;
+  }
+}
+
+/* Gentle wiggle (like playful bronze) */
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+/* Smooth pulse (premium feel for gold) */
+@keyframes pulseSmooth {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+/* Soft shimmer (luxury platinum) */
+@keyframes shimmer {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Subtle bounce (energetic bronze/silver) */
+@keyframes bounceSubtle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Rotate swing (like silver medal shine) */
+@keyframes rotateSmooth {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(6deg);
   }
 }

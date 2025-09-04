@@ -3,7 +3,7 @@ import {
   IconHelp,
   IconSettings
 } from "@tabler/icons-react";
-import { Book, BookOpen, Calendar, ListTodo, LogOut, Timer, Trophy, Users } from "lucide-react";
+import { Book, BookOpen, Calendar, ListTodo, Timer, Trophy, Users } from "lucide-react";
 import { RxDashboard } from "react-icons/rx";
 import { Link, useLocation } from "react-router-dom";
 import { NavMain } from "./nav-main";
@@ -44,10 +44,6 @@ export function AppSidebar(props) {
       <SidebarContent>
         <NavMain items={navMain} pathname={location.pathname} />
         <NavSecondary items={navSecondary} className="mt-auto" pathname={location.pathname} />
-        <button className="flex items-center gap-3.5  p-2.5 pl-6  rounded-[8px]
-                      transition-colors duration-150">
-          <LogOut className="w-5 h-5 flex-shrink-0 transition-transform duration-200" /><span className="font-medium">Log Out</span>
-        </button>
       </SidebarContent>
 
     </Sidebar>

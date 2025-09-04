@@ -1,9 +1,10 @@
-/* eslint-disable no-unused-vars */
+
 
 
 import { isToday } from 'date-fns';
 import { Award, Clock, Pause, Play, RotateCcw, Target } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import notificationSound from '../../../../assets/audio/notification.mp3';
 import { Button } from '../../../../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../../components/ui/card';
 import { Progress } from '../../../../components/ui/progress';
@@ -93,9 +94,11 @@ export function FocusTimer() {
             setIsActive(false);
             localStorage.removeItem('focusTimerState');
 
-            // Play sound on completion
-            audioRef.current?.play().catch(e => console.error("Error playing sound:", e));
-
+            if (audioRef.current) {
+                audioRef.current.currentTime = 0;
+                audioRef.current.volume = 1.0;
+                audioRef.current.play().catch(e => console.error("Error playing sound:", e));
+            }
             if (sessionStartTime) {
                 addFocusSession.mutate({
                     startTime: sessionStartTime.toISOString(),
@@ -120,7 +123,7 @@ export function FocusTimer() {
             Notification.requestPermission();
         }
         // Initialize audio object
-        audioRef.current = new Audio('/audio/notification.mp3');
+        audioRef.current = new Audio(notificationSound);
     }, []);
 
     const toggleTimer = () => {
@@ -134,14 +137,14 @@ export function FocusTimer() {
                 active: true,
                 lastSeen: Date.now()
             }));
-            // Play and immediately pause the audio to unlock it for autoplay
-            const playPromise = audioRef.current?.play();
-            if (playPromise !== undefined) {
-                playPromise.then(_ => {
-                    audioRef.current?.pause();
+
+            // Unlock audio on first interaction
+            if (audioRef.current) {
+                audioRef.current.play().then(() => {
+                    audioRef.current.pause();
                     audioRef.current.currentTime = 0;
-                }).catch(error => {
-                    console.log("Audio unlock failed, will try again on next interaction.");
+                }).catch(err => {
+                    console.log("Audio unlock failed:", err);
                 });
             }
         } else {
@@ -154,6 +157,7 @@ export function FocusTimer() {
             }));
         }
     };
+
 
     const resetTimer = () => {
         setIsActive(false);
@@ -177,7 +181,7 @@ export function FocusTimer() {
         const longestStreak = sessions.reduce((max, s, i, arr) => {
             if (s.type === 'pomodoro') {
                 let currentStreak = 1;
-                // This is a simplified streak calculation, a more robust one would analyze dates
+
                 for (let j = i - 1; j >= 0; j--) {
                     if (arr[j].type === 'pomodoro') currentStreak++;
                     else break;
@@ -250,6 +254,7 @@ export function FocusTimer() {
                         />
                     </CardContent>
                 </Card>
+
             </div>
         </div>
     );

@@ -128,7 +128,7 @@ const FEATURES = [
 /** MAIN COMPONENT */
 export default function FeatureGrid() {
     return (
-        <section className="bg-sidebar  min-h-screen p-6 font-sans">
+        <section className="bg-sidebar  min-h-screen p-6">
             <div className="max-w-6xl mx-auto py-16">
                 {/* Section Header */}
                 <div className="text-center mb-20">

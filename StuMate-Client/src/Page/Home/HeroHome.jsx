@@ -1,4 +1,5 @@
 import CodeDisplay from "./CodeDisplay";
+import FAQSection from "./FAQSection";
 import FeatureGrid from "./FeatureGrid";
 import Hero from "./Home";
 import Testimonial from "./Testimonial";
@@ -11,6 +12,7 @@ export default function HeroHome() {
 
             <FeatureGrid />
             <Testimonial />
+            <FAQSection />
         </div>
     );
 }

@@ -1,4 +1,4 @@
-import HomeImage from "../../assets/stumate-dashboard.webp";
+import HomeImage from "../../assets/stumate-dashborad.webp";
 
 export default function CodeDisplay() {
     return (

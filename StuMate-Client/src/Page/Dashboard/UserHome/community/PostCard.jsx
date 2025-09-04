@@ -88,7 +88,7 @@ export function PostCard({ post }) {
                         </AlertDialog>
                     </div>
                 )}
-                <Link href={`/community/post/${post._id}`} className="block">
+                <Link to={`/dashboard/community/post/${post._id}`} className="block">
                     <CardHeader>
                         <CardTitle>{post.title}</CardTitle>
                     </CardHeader>

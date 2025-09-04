@@ -1,6 +1,6 @@
 
 const AboutSynthMindAI = () => (
-    <header className="bg-gradient-to-r from-dark to-primary-900 text-white py-20">
+    <header className="bg-sidebar text-white pt-20">
         <div className=" px-6 py-16  text-center bg-gradient-to-r from-[#6366f1] to-[#2563eb]">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">About Stumate</h1>
             <p className="text-xl md:text-2xl max-w-3xl mx-auto opacity-90">
@@ -10,7 +10,7 @@ const AboutSynthMindAI = () => (
         {/* Main Content */}
         <main className="max-w-7xl mx-auto px-6 py-16">
             {/* Our Story */}
-            <section className="mb-20">
+            <section className="">
                 <div className="flex flex-col md:flex-row items-center gap-12">
                     <div className="md:w-1/2">
                         <h2 className="text-3xl font-bold text-BgPrimary mb-6">Our Story</h2>

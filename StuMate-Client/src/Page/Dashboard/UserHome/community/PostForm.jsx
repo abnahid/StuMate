@@ -45,8 +45,7 @@ export function PostForm({ isOpen, setIsOpen, post }) {
     const { user } = useAuth();
     const isEditMode = !!post;
 
-    // For demonstration, we assume a user is an admin if their email matches.
-    // In a real application, this should come from a secure source like a JWT.
+
     const isAdmin = useMemo(() => user?.email === 'admin@stumate.com', [user]);
 
     const availableCategories = useMemo(() => {

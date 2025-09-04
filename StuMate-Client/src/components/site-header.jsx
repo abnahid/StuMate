@@ -30,6 +30,12 @@ export function SiteHeader() {
     '/dashboard/focus': 'Focus Mode',
     '/dashboard/journal': 'Study Journal',
     '/dashboard/help': 'Get Help',
+    '/dashboard/community': 'Community',
+    '/dashboard/achievements': 'Achievements',
+    '/dashboard/settings': 'Settings',
+    '/dashboard/settings/plan': 'Manage Plan',
+    '/dashboard/settings/billings': 'Billing Information',
+    '/dashboard/exam-history': 'Quiz History',
   };
 
   const pathname = useLocation().pathname;

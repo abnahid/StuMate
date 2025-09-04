@@ -4,7 +4,7 @@ const achievementsConfig = {
         icon: 'profile',
         tiers: [
             {
-                id: 'profile_1', title: 'Profile Pro', description: 'Complete all profile fields.', tier: 'bronze', check: (data) =>
+                id: 'profile_1', title: 'Profile Pro', description: 'Complete all profile fields.', tier: 'platinum', check: (data) =>
                     data.profile &&
                     data.profile.name &&
                     data.profile.university &&

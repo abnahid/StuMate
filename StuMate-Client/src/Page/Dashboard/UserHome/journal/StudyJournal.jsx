@@ -138,7 +138,7 @@ export function StudyJournal() {
                                         return (
                                             <div key={journal._id} className="flex items-center gap-4">
                                                 <div className="flex flex-col items-center w-20">
-                                                    <MoodIcon className={cn("h-6 w-6", moodConfig.color)} />
+                                                    <span className={cn("text-2xl", moodConfig.color)}>{moodConfig.icon}</span>
                                                     <span className="text-xs text-muted-foreground text-center">{moodConfig.label}</span>
                                                 </div>
                                                 <div className="flex-1 rounded-md border bg-muted/20 p-3">

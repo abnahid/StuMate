@@ -339,7 +339,7 @@ async function run() {
       if (!existingPost) {
         return res.status(404).send({ message: "Post not found" });
       }
-      // Basic check to ensure only owners can edit. In a real app, use verifyToken.
+
       if (existingPost.authorEmail !== postData.authorEmail) {
         return res.status(403).send({ message: "Forbidden: You can only edit your own posts." });
       }
@@ -352,8 +352,7 @@ async function run() {
 
     app.delete('/api/posts/:id', async (req, res) => {
       const id = req.params.id;
-      // In a real app, you'd get the email from the verified JWT token
-      const userEmail = req.body.email; // This is insecure for a real app.
+      const userEmail = req.body.email;
 
       const postToDelete = await postsCollection.findOne({ _id: new ObjectId(id) });
       if (!postToDelete) return res.status(404).send({ message: "Post not found" });

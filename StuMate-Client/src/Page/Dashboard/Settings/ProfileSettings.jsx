@@ -30,14 +30,30 @@ const profileSchema = z.object({
 
 function ProfileSkeleton() {
   return (
-    <div className="space-y-6">
-      <Skeleton className="h-24 w-full" />
-      <Skeleton className="h-12 w-full" />
-      <Skeleton className="h-12 w-full" />
-      <Skeleton className="h-12 w-full" />
-      <Skeleton className="h-10 w-24" />
+    <div className="w-full min-h-screen flex flex-col items-center pt-10 gap-10">
+      <div className="w-[640px] px-6 py-5 bg-card rounded-lg border border-[#e3e5ec] flex flex-col gap-4">
+        <div className="flex flex-col items-center gap-2">
+          <Skeleton className="w-32 h-32 rounded-full" />
+          <Skeleton className="h-6 w-40 mt-2" />
+          <Skeleton className="h-4 w-56" />
+        </div>
+        <hr className="border-[#b9becf]" />
+      </div>
+
+      <div className="w-[640px] flex flex-col gap-4">
+        <Skeleton className="h-12 w-full" />
+        <Skeleton className="h-12 w-full" />
+        <Skeleton className="h-12 w-full" />
+        <Skeleton className="h-12 w-full" />
+        <Skeleton className="h-10 w-32" />
+        <Skeleton className="h-8 w-48 mt-4" />
+        <div className="flex items-end gap-3 mt-2">
+          <Skeleton className="h-8 w-32" />
+          <Skeleton className="h-8 w-32" />
+        </div>
+      </div>
     </div>
-  )
+  );
 }
 const UserProfile = () => {
   const { user, setUser } = useAuth();

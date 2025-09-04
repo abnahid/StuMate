@@ -34,7 +34,7 @@ export default function Register() {
           animationData={LottieLogin}
           loop={true}
           className={`absolute inset-0 m-auto h-[70%] w-[70%] object-contain 
-    ${isDarkMode ? "brightness-[0.2] grayscale" : ""}`}
+    ${isDarkMode ? "" : ""}`}
         />
 
       </div>

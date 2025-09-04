@@ -44,7 +44,18 @@ export function QuizDisplay({ quizData, onExit, onRetry }) {
         setUserAnswers(newAnswers);
     };
 
+    const resetQuiz = () => {
+        setQuizState('start');
+        setCurrentQuestionIndex(0);
+        setUserAnswers([]);
+        setTimeLeft(quizData.questions.length * TIME_PER_QUESTION);
+    };
 
+    // Handle retry button from QuizResults
+    const handleRetry = () => {
+        resetQuiz();
+        if (onRetry) onRetry(); // optional: if parent wants to track retries
+    };
 
     const handleNextQuestion = () => {
         if (currentQuestionIndex < quizData.questions.length - 1) {
@@ -62,7 +73,7 @@ export function QuizDisplay({ quizData, onExit, onRetry }) {
 
     if (quizState === 'start') {
         return (
-            <Card className="h-full">
+            <Card className="h-full m-4">
                 <CardHeader>
                     <CardTitle>You are about to start a quiz!</CardTitle>
                     <CardDescription>Topic: <strong>{quizData.settings.topic}</strong></CardDescription>
@@ -81,7 +92,7 @@ export function QuizDisplay({ quizData, onExit, onRetry }) {
     }
 
     if (quizState === 'finished') {
-        return <QuizResults quizData={quizData} userAnswers={userAnswers} onRetry={onRetry} />;
+        return <QuizResults quizData={quizData} userAnswers={userAnswers} onRetry={handleRetry} />;
     }
 
     const currentQuestion = quizData.questions[currentQuestionIndex];
@@ -131,7 +142,7 @@ export function QuizDisplay({ quizData, onExit, onRetry }) {
     }
 
     return (
-        <Card>
+        <Card className="m-4">
             <CardHeader>
                 <div className="flex justify-between items-center">
                     <CardTitle>Question {currentQuestionIndex + 1} / {quizData.questions.length}</CardTitle>

@@ -1,14 +1,12 @@
-
-
-import { formatDistanceToNow } from 'date-fns';
-import { ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../../components/ui/avatar';
-import { Button } from '../../../../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../../components/ui/card';
-import { Skeleton } from '../../../../components/ui/skeleton';
-import { useCommunity } from '../../../../hooks/useCommunity';
-import { CommentSection } from './CommentSection';
+import { formatDistanceToNow } from "date-fns";
+import { ArrowLeft } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "../../../../components/ui/avatar";
+import { Button } from "../../../../components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../../components/ui/card";
+import { Skeleton } from "../../../../components/ui/skeleton";
+import { useCommunity } from "../../../../hooks/useCommunity";
+import { CommentSection } from "./CommentSection";
 
 function PostViewSkeleton() {
     return (
@@ -30,8 +28,8 @@ function PostViewSkeleton() {
     );
 }
 
-
-export function PostView({ postId }) {
+export function PostView() {
+    const { postId } = useParams();
     const { usePost } = useCommunity();
     const { data: post, isLoading } = usePost(postId);
 
@@ -41,7 +39,7 @@ export function PostView({ postId }) {
     return (
         <div>
             <Button asChild variant="outline" className="mb-4">
-                <Link href="/community">
+                <Link to="/dashboard/community">
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Back to Community
                 </Link>
@@ -56,7 +54,11 @@ export function PostView({ postId }) {
                         </Avatar>
                         <div>
                             <p className="font-semibold text-foreground">{post.authorName}</p>
-                            <p>{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}</p>
+                            <p>
+                                {formatDistanceToNow(new Date(post.createdAt), {
+                                    addSuffix: true,
+                                })}
+                            </p>
                         </div>
                     </div>
                 </CardHeader>

@@ -82,7 +82,7 @@ export function ExamGenerator() {
             case 'form':
             default:
                 return (
-                    <Form {...form}>
+                    <Form {...form} >
                         <form onSubmit={form.handleSubmit(onSubmit)} >
                             <CardContent className="space-y-4 ">
                                 {error && (
@@ -175,7 +175,7 @@ export function ExamGenerator() {
 
 
     return (
-        <Card className="lg:col-span-1 max-w-3xl mx-auto">
+        <Card className="lg:col-span-1 ">
             <CardHeader>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">

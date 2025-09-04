@@ -25,6 +25,7 @@ import Plan from "../Page/Dashboard/Settings/Plan";
 import { AchievementPage } from "../Page/Dashboard/UserHome/achievements/AchievementSkeleton";
 import { BudgetTracker } from "../Page/Dashboard/UserHome/budget/BudgetTracker";
 import { CommunityPage } from "../Page/Dashboard/UserHome/community/CommunityPage";
+import { PostView } from "../Page/Dashboard/UserHome/community/PostView";
 import { Overview } from "../Page/Dashboard/UserHome/dashboard/Overview";
 import ExamGenerator from "../Page/Dashboard/UserHome/exam/ExamGenerator";
 import { QuizHistory } from "../Page/Dashboard/UserHome/exam/QuizHistory";
@@ -71,6 +72,9 @@ const router = createBrowserRouter([
             { path: "exam-history", element: <QuizHistory /> },
             { path: "help", element: <HelpPage /> },
             { path: "community", element: <CommunityPage /> },
+            { path: "community/post/:postId", element: <PostView /> },
+
+
             { path: "achievements", element: <AchievementPage /> },
 
             // Settings (for both user/admin)
