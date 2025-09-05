@@ -1,10 +1,10 @@
 # Stumate — Make Student Life Easier
 
-**Stumate** is a comprehensive web application built with React and Next.js, designed to streamline and simplify the daily life of a student. It helps students **organize classes, plan study, track money, and prepare for exams** — all in one app.
+**Stumate** is a comprehensive web application built with React, designed to streamline and simplify the daily life of a student. It helps students **organize classes, plan study, track money, and prepare for exams** — all in one app.
 
 Stumate is designed to tackle typical pain points students face: missed classes, disorganized study plans, unmanaged budgets, and lack of focused practice. The app brings scheduling, budgeting, exam prep, and an intelligent study planner together, synced to the cloud.
 
-![StudentSavvy Dashboard](https://i.ibb.co.com/CK1RVKGT/stumate.webp)
+![Stumate Dashboard](https://i.ibb.co.com/CK1RVKGT/stumate.webp)
 
 ## ✨ Core Features
 

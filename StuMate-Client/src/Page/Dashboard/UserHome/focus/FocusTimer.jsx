@@ -203,7 +203,11 @@ export function FocusTimer() {
                     <CardDescription>Use the Pomodoro Technique to boost your productivity.</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col items-center justify-center space-y-8 p-8">
-                    <Tabs value={sessionType} onValueChange={handleSessionChange} className="w-[400px]">
+                    <Tabs
+                        value={sessionType}
+                        onValueChange={handleSessionChange}
+                        className="w-full max-w-xs sm:max-w-md md:max-w-lg mx-auto"
+                    >
                         <TabsList className="grid w-full grid-cols-3">
                             <TabsTrigger value="pomodoro">Pomodoro</TabsTrigger>
                             <TabsTrigger value="short-break">Short Break</TabsTrigger>

@@ -10,34 +10,39 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../..
 
 const faqs = [
     {
-        question: 'How do I add a new class to my schedule?',
+        question: "How do I add a new class to my schedule?",
         answer:
             'Go to the "Schedule" page and click the "Add Event" button. Fill in the details like event name, subject, date, and time, then click "Save". Your new class will appear on the calendar.',
     },
     {
-        question: 'How does the budget tracker work?',
+        question: "How does the budget tracker work?",
         answer:
             'On the "Budget" page, click "Add Transaction". You can log both income and expenses. Categorize each transaction to see a breakdown of your spending habits in the chart.',
     },
     {
-        question: 'What is the Study Planner for?',
+        question: "What is the Study Planner for?",
         answer:
             'The "Study Planner" uses a Kanban board to help you organize your tasks. You can create tasks, assign them a subject and priority, and drag them between "To Do", "In Progress", and "Done" columns to track your progress.',
     },
     {
-        question: 'How do I use the AI Exam Prep feature?',
+        question: "How do I use the AI Exam Prep feature?",
         answer:
             'Navigate to the "Exam Prep" page. Enter a topic you want to study, select a difficulty and grade level, and choose the number of questions. The AI will generate a custom quiz for you to practice.',
     },
     {
-        question: 'What happens if I close the tab during a Focus Mode session?',
+        question: "What happens if I close the tab during a Focus Mode session?",
         answer:
-            'The Focus Timer is persistent. If you accidentally close the tab or refresh the page, the timer will continue running from where you left off. You won\'t lose your progress.',
+            "The Focus Timer is persistent. If you accidentally close the tab or refresh the page, the timer will continue running from where you left off. You won't lose your progress.",
     },
     {
-        question: 'How do I save my Gemini API Key?',
+        question: "What are achievements and how do I unlock them?",
         answer:
-            'Click on your user profile in the sidebar, then select "Settings". You can paste your Google AI (Gemini) API key there. It will be saved securely in your browser\'s local storage for the AI features to use.',
+            'Achievements are gamified badges you earn for using the app\'s features, like logging transactions or completing focus sessions. Go to the "Achievements" page to see all available badges and your progress toward unlocking them.',
+    },
+    {
+        question: "How do I post in the community forum?",
+        answer:
+            'Visit the "Community" page and click the "New Post" button. You can then write your post, select a category, and share it with other students. Only admins can post in the "Announcements" category.',
     },
 ];
 

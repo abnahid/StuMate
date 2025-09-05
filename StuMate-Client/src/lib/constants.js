@@ -2,16 +2,37 @@ import { BrainCircuit, Frown, Meh, Zap } from 'lucide-react';
 
 export const SUBJECT_COLORS = {
     default: 'border-gray-500',
-    Math: 'border-blue-500',
-    Science: 'border-green-500',
+
+    // Science Stream
+    Physics: 'border-blue-500',
+    Chemistry: 'border-green-500',
+    Biology: 'border-emerald-500',
+    Math: 'border-indigo-500',
+    ComputerScience: 'border-cyan-500',
+    WebDevelopment: 'border-teal-500',
+    "Web Development": 'border-cyan-500',
+    // Arts Stream
     History: 'border-yellow-500',
-    English: 'border-purple-500',
+    Geography: 'border-lime-500',
+    Literature: 'border-purple-500',
     Art: 'border-pink-500',
-    PE: 'border-orange-500',
-    Music: 'border-indigo-500',
-    Technology: 'border-sky-500',
-    Languages: 'border-rose-500',
+    Music: 'border-indigo-400',
+    Drama: 'border-rose-400',
+
+    // Commerce Stream
+    Accounting: 'border-orange-500',
+    Economics: 'border-amber-500',
+    BusinessStudies: 'border-fuchsia-500',
+    Entrepreneurship: 'border-rose-500',
+
+    // Common subjects for all students / children
+    English: 'border-violet-500',
+    Languages: 'border-rose-600',
+    PhysicalEducation: 'border-orange-400',
+    MoralEducation: 'border-sky-400',
+    ComputerBasics: 'border-sky-500',
 };
+
 
 export const DAYS_OF_WEEK = [
     'Monday',

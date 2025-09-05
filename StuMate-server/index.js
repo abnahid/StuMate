@@ -9,6 +9,7 @@ dotenv.config();
 import questionsRoutes from "./routes/questions.js"; // note the .js extension
 
 import { MongoClient, ObjectId, ServerApiVersion } from "mongodb";
+import { studyPathGenerator } from "./genkit.js";
 
 const app = express();
 const port = process.env.PORT || 5012;
@@ -386,6 +387,18 @@ async function run() {
       const result = await commentsCollection.insertOne(comment);
       await postsCollection.updateOne({ _id: new ObjectId(comment.postId) }, { $inc: { commentCount: 1 } });
       res.send({ ...comment, _id: result.insertedId });
+    });
+
+
+    app.post("/api/study-path/generate", async (req, res) => {
+      try {
+        const { objective } = req.body;
+        const roadmap = await studyPathGenerator({ objective });
+        res.send(roadmap);
+      } catch (error) {
+        console.error("AI Study Path Generation Error:", error);
+        res.status(500).send({ message: "Failed to generate study path." });
+      }
     });
 
   } catch (e) {

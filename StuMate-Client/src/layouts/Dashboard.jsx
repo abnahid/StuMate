@@ -19,7 +19,6 @@ const Dashboard = () => {
   return (
     <SidebarProvider>
 
-      {/* Sidebar - static on desktop, toggle on mobile */}
       <AppSidebar />
       <SidebarInset>
         <SiteHeader />

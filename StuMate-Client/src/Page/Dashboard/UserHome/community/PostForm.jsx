@@ -117,7 +117,7 @@ export function PostForm({ isOpen, setIsOpen, post }) {
                                         </FormControl>
                                         <SelectContent>
                                             {availableCategories.map(cat => (
-                                                <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                                                <SelectItem key={cat.value} value={cat.value} textValue={cat.label}>{cat.label}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>

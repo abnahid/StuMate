@@ -27,7 +27,7 @@ const Footer2 = () => {
                 </Link>
 
                 {/* Navigation */}
-                <ul className="flex flex-wrap gap-12 text-md font-medium text-gray-600 dark:text-gray-400">
+                <ul className="flex flex-wrap justify-center gap-6 md:gap-12 text-md font-medium text-gray-600 dark:text-gray-400">
                     <li><Link to="/about" className="hover:text-gray-900 dark:hover:text-white">About</Link></li>
                     <li><Link to="/features" className="hover:text-gray-900 dark:hover:text-white">Features</Link></li>
                     <li><Link to="/works" className="hover:text-gray-900 dark:hover:text-white">Works</Link></li>

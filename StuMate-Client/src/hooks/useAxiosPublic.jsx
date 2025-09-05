@@ -1,8 +1,10 @@
 import axios from "axios";
 
 const axiosPublic = axios.create({
-  baseURL: 'https://stumate.vercel.app/api',
+  baseURL: 'http://localhost:5012/api',
 });
+
+
 
 const useAxiosPublic = () => {
   return axiosPublic;

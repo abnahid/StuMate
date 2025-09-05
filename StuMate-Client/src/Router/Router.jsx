@@ -34,6 +34,7 @@ import { HelpPage } from "../Page/Dashboard/UserHome/HelpPage";
 import { StudyJournal } from "../Page/Dashboard/UserHome/journal/StudyJournal";
 import { PlannerBoard } from "../Page/Dashboard/UserHome/planner/PlannerBoard";
 import { ScheduleView } from "../Page/Dashboard/UserHome/schedule/ScheduleView";
+import { StudyPathGenerator } from "../Page/Dashboard/UserHome/StudyPath/StudyPathGenerator";
 import HeroHome from "../Page/Home/HeroHome";
 
 const router = createBrowserRouter([
@@ -43,7 +44,7 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
             { path: "/", element: <HeroHome /> },
-            { path: "/about-us", element: <AboutPage /> },
+            { path: "/about", element: <AboutPage /> },
             { path: "/contact-us", element: <ContactPage /> },
             { path: "/login", element: <LoginPage /> },
             { path: "/register", element: <Register /> },
@@ -73,6 +74,7 @@ const router = createBrowserRouter([
             { path: "help", element: <HelpPage /> },
             { path: "community", element: <CommunityPage /> },
             { path: "community/post/:postId", element: <PostView /> },
+            { path: "study-path", element: <StudyPathGenerator /> }, // Study Path Coming Soon
 
 
             { path: "achievements", element: <AchievementPage /> },

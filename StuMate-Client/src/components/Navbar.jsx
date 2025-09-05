@@ -1,6 +1,6 @@
 import ThemeContext from "@/context/ThemeContext";
 import { useContext, useEffect, useState } from "react";
-import { FaMoon, FaSun } from "react-icons/fa";
+import { FaBars, FaMoon, FaSun, FaTimes } from "react-icons/fa";
 import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../context/AuthProvider";
 import {
@@ -16,7 +16,7 @@ const defaultProfilePicture = "/avatars/default-user.png";
 const Navbar = () => {
   const { user, signOutUser } = useContext(AuthContext);
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
-
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -33,42 +33,44 @@ const Navbar = () => {
         <NavLink
           to="/"
           className={({ isActive }) =>
-            isActive
-              ? `${activeStyle} hover:text-primary px-3 py-1 rounded-lg`
+            isActive ? `${activeStyle} hover:text-primary px-3 py-1 rounded-lg`
               : "hover:text-primary px-3 py-1 rounded-lg"
           }
         >
           Home
         </NavLink>
       </li>
-
       <li>
-        <NavLink to="/about-us" className={({ isActive }) =>
-          isActive ? activeStyle : "hover:text-primary px-3 py-1 rounded-lg"
-        }>
+        <NavLink
+          to="/about"
+          className={({ isActive }) =>
+            isActive ? activeStyle : "hover:text-primary px-3 py-1 rounded-lg"
+          }
+        >
           About Us
         </NavLink>
       </li>
-
       <li>
-        <NavLink to="/contact-us" className={({ isActive }) =>
-          isActive ? activeStyle : "hover:text-primary px-3 py-1 rounded-lg"
-        }>
+        <NavLink
+          to="/contact-us"
+          className={({ isActive }) =>
+            isActive ? activeStyle : "hover:text-primary px-3 py-1 rounded-lg"
+          }
+        >
           Contact Us
         </NavLink>
       </li>
-      {user ? (
-        <>
-          <li>
-            <NavLink to="/dashboard/userHome" className={({ isActive }) =>
+      {user && (
+        <li>
+          <NavLink
+            to="/dashboard/userHome"
+            className={({ isActive }) =>
               isActive ? activeStyle : "hover:text-primary px-3 py-1 rounded-lg"
-            }>
-              Dashboard
-            </NavLink>
-          </li>
-
-        </>
-      ) : (null
+            }
+          >
+            Dashboard
+          </NavLink>
+        </li>
       )}
     </>
   );
@@ -82,11 +84,10 @@ const Navbar = () => {
         : "bg-transparent"
         }`}
     >
-
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-4">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <img src="/assets/SVG/logo.svg" alt="" className="h-12" />
+          <img src="/assets/SVG/logo.svg" alt="Logo" className="h-12" />
         </Link>
 
         <div className="hidden lg:flex">
@@ -99,64 +100,54 @@ const Navbar = () => {
         </div>
 
         <div
-          className={`flex items-center space-x-4 transition-colors duration-300 ${isDarkMode ? "text-gray-200" : "text-gray-900"
+          className={`flex items-center space-x-2 transition-colors duration-300 ${isDarkMode ? "text-gray-200" : "text-gray-900"
             }`}
         >
+
+
           {user ? (
-            <button
-              className={`p-2 rounded-full transition-all duration-300 relative overflow-hidden ${isDarkMode
-                ? "bg-gray-800 text-primary hover:bg-gray-700"
-                : "bg-[var(--primary-foreground)] text-primary hover:bg-gray-200"
-                } hover:scale-110`}
+            <> <button
               onClick={toggleTheme}
-              aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+              className={`p-3 rounded-full ${isDarkMode ? "bg-gray-800 text-primary" : "bg-gray-200 text-primary"
+                }`}
             >
-              {isDarkMode ? (
-                <FaSun className="relative z-10 transition-transform duration-300 hover:rotate-12" />
-              ) : (
-                <FaMoon className="relative z-10 transition-transform duration-300 hover:rotate-12" />
-              )}
-            </button>
-          ) : null}
-
-
-          {/* User Dropdown */}
-          {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className={`flex items-center p-1 rounded-lg focus:outline-none`}>
-                  <img
-                    src={user?.photoURL || defaultProfilePicture}
-                    alt="User Profile"
-                    className="w-10 h-10 rounded-full"
-                  />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <div className="px-4 py-2 border-b">
-                  <p className="text-sm font-medium">{user?.displayName || "User"}</p>
-                  <p className="text-xs">{user?.email || "user@example.com"}</p>
-                </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Link to="/dashboard/help">Help & Support</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link to="#">Write a Review</Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <button
-                    onClick={signOutUser}
-                    className="w-full text-left text-primary"
-                  >
-                    Logout
+              {isDarkMode ? <FaSun /> : <FaMoon />}
+            </button>           <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="flex items-center p-1 rounded-lg focus:outline-none">
+                    <img
+                      src={user?.photoURL || defaultProfilePicture}
+                      alt="User Profile"
+                      className="w-10 h-10 rounded-full"
+                    />
                   </button>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <div className="px-4 py-2 border-b">
+                    <p className="text-sm font-medium">{user?.displayName || "User"}</p>
+                    <p className="text-xs">{user?.email || "user@example.com"}</p>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <Link to="/dashboard/help">Help & Support</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="#">Write a Review</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <button
+                      onClick={signOutUser}
+                      className="w-full text-left text-primary"
+                    >
+                      Logout
+                    </button>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
           ) : (
-            <div className="flex space-x-2">
+            <div className="hidden lg:flex space-x-2">
               <Link
                 to="/login"
                 className="px-4 py-2 rounded-lg bg-primary text-white font-semibold hover:opacity-90"
@@ -165,16 +156,55 @@ const Navbar = () => {
               </Link>
               <Link
                 to="/register"
-                className="px-4 py-2 rounded-lg border border-primary text-primary font-semibold hover:bg-[var(--primary-foreground)]"
+                className="px-4 py-2 rounded-lg border border-primary text-primary font-semibold hover:bg-gray-50"
               >
                 Get Started
               </Link>
             </div>
           )}
+
+          <button
+            className="lg:hidden p-2 rounded-md focus:outline-none"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
+          </button>
         </div>
+
+
       </div>
-    </nav>
+
+      {isMenuOpen && (
+        <div
+          className={`lg:hidden px-6 py-4 space-y-4 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"
+            } shadow-md transition-colors duration-300`}
+        >
+          <ul className="space-y-3">{links}</ul>
+
+          {user ? (
+            null
+          ) : (
+            <div className="flex flex-col gap-2">
+              <Link
+                to="/login"
+                className="px-4 py-2 rounded-lg bg-primary text-white font-semibold text-center"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/register"
+                className="px-4 py-2 rounded-lg border border-primary text-primary font-semibold text-center"
+              >
+                Get Started
+              </Link>
+            </div>
+          )
+          }
+        </div >
+      )}
+
+    </nav >
   );
-}
+};
 
 export default Navbar;

@@ -3,7 +3,7 @@ import {
   IconHelp,
   IconSettings
 } from "@tabler/icons-react";
-import { Book, BookOpen, Calendar, ListTodo, Timer, Trophy, Users } from "lucide-react";
+import { Book, BookOpen, Calendar, ListTodo, Route, Timer, Trophy, Users, } from "lucide-react";
 import { RxDashboard } from "react-icons/rx";
 import { Link, useLocation } from "react-router-dom";
 import { NavMain } from "./nav-main";
@@ -19,6 +19,7 @@ const navMain = [
   { title: "Budget", url: "/dashboard/budget", icon: IconCurrencyDollar, id: 'tour-budget' },
   { title: "Study Planner", url: "/dashboard/planner", icon: ListTodo, id: 'tour-planner' },
   { title: "Exam Prep", url: "/dashboard/exam-prep", icon: BookOpen, id: 'tour-exam-prep' },
+  { title: 'Study Path', url: '/dashboard/study-path', icon: Route, },
   { title: "Focus Mode", url: "/dashboard/focus", icon: Timer, id: 'tour-focus-mode' },
   { title: 'Study Journal', url: '/dashboard/journal', icon: Book, id: 'tour-study-journal' },
   { title: 'Achievements', url: '/dashboard/achievements', icon: Trophy, id: 'tour-achievements' },

@@ -83,7 +83,7 @@ export function CalendarGrid({ currentDate, onEditEvent }) {
                                 <div
                                     key={event._id}
                                     className={cn(
-                                        'group relative rounded-md p-1.5 text-xs leading-tight border-l-4',
+                                        'group relative rounded-md p-1.5 text-xs leading-tight border-l-4 bg-sidebar',
                                         SUBJECT_COLORS[event.subject] || SUBJECT_COLORS.default
                                     )}
                                 >

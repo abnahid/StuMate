@@ -1,4 +1,3 @@
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -27,34 +26,34 @@ const profileSchema = z.object({
   grade: z.string().optional(),
 });
 
-
 function ProfileSkeleton() {
   return (
     <div className="w-full min-h-screen flex flex-col items-center pt-10 gap-10">
-      <div className="w-[640px] px-6 py-5 bg-card rounded-lg border border-[#e3e5ec] flex flex-col gap-4">
+      <div className="w-full max-w-[640px] px-4 py-5 sm:px-6 bg-card rounded-lg border border-[#e3e5ec] flex flex-col gap-4">
         <div className="flex flex-col items-center gap-2">
-          <Skeleton className="w-32 h-32 rounded-full" />
-          <Skeleton className="h-6 w-40 mt-2" />
-          <Skeleton className="h-4 w-56" />
+          <Skeleton className="w-24 h-24 sm:w-32 sm:h-32 rounded-full" />
+          <Skeleton className="h-5 w-32 sm:h-6 sm:w-40 mt-2" />
+          <Skeleton className="h-4 w-40 sm:w-56" />
         </div>
         <hr className="border-[#b9becf]" />
       </div>
 
-      <div className="w-[640px] flex flex-col gap-4">
-        <Skeleton className="h-12 w-full" />
-        <Skeleton className="h-12 w-full" />
-        <Skeleton className="h-12 w-full" />
-        <Skeleton className="h-12 w-full" />
-        <Skeleton className="h-10 w-32" />
-        <Skeleton className="h-8 w-48 mt-4" />
-        <div className="flex items-end gap-3 mt-2">
-          <Skeleton className="h-8 w-32" />
-          <Skeleton className="h-8 w-32" />
+      <div className="w-full max-w-[640px] flex flex-col gap-4 px-4 sm:px-0">
+        <Skeleton className="h-10 w-full sm:h-12" />
+        <Skeleton className="h-10 w-full sm:h-12" />
+        <Skeleton className="h-10 w-full sm:h-12" />
+        <Skeleton className="h-10 w-full sm:h-12" />
+        <Skeleton className="h-8 w-24 sm:h-10 sm:w-32" />
+        <Skeleton className="h-6 w-32 sm:h-8 sm:w-48 mt-4" />
+        <div className="flex flex-col sm:flex-row items-end gap-3 mt-2">
+          <Skeleton className="h-6 w-24 sm:h-8 sm:w-32" />
+          <Skeleton className="h-6 w-24 sm:h-8 sm:w-32" />
         </div>
       </div>
     </div>
   );
 }
+
 const UserProfile = () => {
   const { user, setUser } = useAuth();
   const { toast } = useToast();
@@ -144,12 +143,10 @@ const UserProfile = () => {
 
   if (isLoading) return <ProfileSkeleton />;
 
-
-
   return (
-    <div className="w-full min-h-screen flex flex-col items-center pt-10 gap-10">
+    <div className="w-full min-h-screen flex flex-col items-center pt-6 sm:pt-10 gap-6 sm:gap-10">
       {/* Profile Card */}
-      <div className="w-[640px] px-6 py-5 bg-card rounded-lg border border-[#e3e5ec] flex flex-col gap-4">
+      <div className="w-full max-w-[640px] px-4 py-5 sm:px-6 bg-card rounded-lg border border-[#e3e5ec] flex flex-col gap-4">
         <ProfileImageUploader
           user={user}
           onChange={handlePhotoChange}
@@ -157,13 +154,13 @@ const UserProfile = () => {
         />
         <hr className="border-[#b9becf]" />
         <div>
-          <h2 className="text-lg font-bold text-card-foreground">{user.name}</h2>
-          <p className="text-sm font-medium text-[#8c94ab]">{user.email}</p>
+          <h2 className="text-base sm:text-lg font-bold text-card-foreground">{user.name}</h2>
+          <p className="text-xs sm:text-sm font-medium text-[#8c94ab]">{user.email}</p>
         </div>
       </div>
 
       {/* Profile Settings Form */}
-      <div className="w-[640px] flex flex-col gap-4">
+      <div className="w-full max-w-[640px] flex flex-col gap-4 px-4 sm:px-0">
         {/* Name */}
         <Form {...form}>
           <form
@@ -223,7 +220,7 @@ const UserProfile = () => {
               )}
             />
             <div>
-              <Button type="submit" disabled={form.formState.isSubmitting}>
+              <Button type="submit" disabled={form.formState.isSubmitting} className="w-full sm:w-auto">
                 {form.formState.isSubmitting ? 'Saving...' : 'Save Changes'}
               </Button>
             </div>
@@ -234,20 +231,20 @@ const UserProfile = () => {
         <div className="flex flex-col gap-1">
           <label className="text-xs text-[#595e70]">Email address</label>
           <div className="px-3 py-2 bg-[#f2f3f8] rounded-lg border border-[#b9becf] opacity-70">
-            <span className="text-sm font-semibold text-[#8c94ab]">{user.email}</span>
+            <span className="text-xs sm:text-sm font-semibold text-[#8c94ab]">{user.email}</span>
           </div>
         </div>
 
         {/* Password */}
-        <div className="flex items-end gap-3">
+        <div className="flex flex-col sm:flex-row items-end gap-3">
           <div className="flex-1 flex flex-col gap-1">
             <label className="text-xs text-[#595e70]">Password</label>
             <div className="px-3 py-2 bg-white rounded-lg border border-[#e3e5ec]">
-              <span className="text-sm font-semibold text-[#131314]">*************</span>
+              <span className="text-xs sm:text-sm font-semibold text-[#131314]">*************</span>
             </div>
           </div>
           <button
-            className="px-4 py-2 bg-white rounded-lg border border-[#b9becf] text-sm font-semibold text-[#595e70]"
+            className="px-4 py-2 bg-white rounded-lg border border-[#b9becf] text-xs sm:text-sm font-semibold text-[#595e70] mt-2 sm:mt-0"
             onClick={() => setChangePasswordOpen(true)}
           >
             Change Password
@@ -258,8 +255,8 @@ const UserProfile = () => {
       {/* Modal for Name / Photo */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white rounded-lg p-6 w-[400px] flex flex-col gap-4">
-            <h3 className="text-lg font-bold">
+          <div className="bg-white rounded-lg p-4 sm:p-6 w-[90vw] max-w-[400px] flex flex-col gap-4">
+            <h3 className="text-base sm:text-lg font-bold">
               {modalType === "photo" ? "Change Profile Photo" : "Change Name"}
             </h3>
 
@@ -276,7 +273,7 @@ const UserProfile = () => {
               <>
                 <input type="file" accept="image/*" onChange={handlePhotoChange} />
                 {formPhoto && (
-                  <img src={formPhoto} alt="Preview" className="w-32 h-32 object-cover rounded-full mt-2" />
+                  <img src={formPhoto} alt="Preview" className="w-24 h-24 sm:w-32 sm:h-32 object-cover rounded-full mt-2 mx-auto" />
                 )}
               </>
             )}

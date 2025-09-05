@@ -1,4 +1,3 @@
-
 import { format } from 'date-fns';
 import { ArrowDownCircle, ArrowUpCircle, ChevronLeft, ChevronRight, DollarSign, Edit, PlusCircle, Trash2 } from 'lucide-react';
 import { useState } from 'react';
@@ -64,15 +63,17 @@ export function BudgetTracker() {
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold tracking-tight">Budget Tracker</h2>
-                <Button onClick={handleAdd}>
+        <div className="space-y-4 sm:space-y-6 px-2 sm:px-0">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                <h2 className="text-xl sm:text-2xl font-bold tracking-tight">Budget Tracker</h2>
+                <Button onClick={handleAdd} className="w-full sm:w-auto">
                     <PlusCircle className="mr-2 h-4 w-4" /> Add Transaction
                 </Button>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-3">
+            {/* Stat Cards */}
+            <div className="grid gap-2 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
                 <StatCard
                     title="Total Income"
                     value={`$${totalIncome.toFixed(2)}`}
@@ -93,30 +94,32 @@ export function BudgetTracker() {
                 />
             </div>
 
-            <div className="grid gap-6 md:grid-cols-5">
+            {/* Content Grid */}
+            <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-5">
+                {/* Transaction Table */}
                 <Card className="md:col-span-3">
                     <CardHeader>
                         <CardTitle>Recent Transactions</CardTitle>
                         <CardDescription>A list of your recent income and expenses.</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className="rounded-[16px] border">
-                            <Table>
+                        <div className="rounded-[12px] border overflow-x-auto">
+                            <Table className="min-w-[480px]">
                                 <TableHeader>
                                     <TableRow className="bg-muted/80 hover:bg-muted/80">
-                                        <TableHead className="rounded-tl-[16px] p-3">Description</TableHead>
-                                        <TableHead className="p-3">Category</TableHead>
-                                        <TableHead className="p-3">Date</TableHead>
-                                        <TableHead className="text-right p-3">Amount</TableHead>
-                                        <TableHead className="w-[80px] text-right p-3 rounded-tr-[16px] ">Actions</TableHead>
+                                        <TableHead className="rounded-tl-[12px] p-2 sm:p-3 text-xs sm:text-sm">Description</TableHead>
+                                        <TableHead className="p-2 sm:p-3 text-xs sm:text-sm">Category</TableHead>
+                                        <TableHead className="p-2 sm:p-3 text-xs sm:text-sm">Date</TableHead>
+                                        <TableHead className="text-right p-2 sm:p-3 text-xs sm:text-sm">Amount</TableHead>
+                                        <TableHead className="w-[80px] text-right p-2 sm:p-3 rounded-tr-[12px] text-xs sm:text-sm">Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {currentTransactions.length > 0 ? currentTransactions.map((t) => (
                                         <TableRow key={t._id}>
-                                            <TableCell className="font-normal p-3 text-[14px]">{t.description}</TableCell>
-                                            <TableCell className="p-3">{t.category}</TableCell>
-                                            <TableCell className="p-3">{format(new Date(t.date), 'MMM d, yyyy')}</TableCell>
+                                            <TableCell className="font-normal p-2 sm:p-3 text-xs sm:text-[14px]">{t.description}</TableCell>
+                                            <TableCell className="p-2 sm:p-3 text-xs sm:text-sm">{t.category}</TableCell>
+                                            <TableCell className="p-2 sm:p-3 text-xs sm:text-sm">{format(new Date(t.date), 'MMM d, yyyy')}</TableCell>
                                             <TableCell
                                                 className={cn(
                                                     'text-right font-semibold',
@@ -153,7 +156,6 @@ export function BudgetTracker() {
                                                                     Delete
                                                                 </AlertDialogAction>
                                                             </div>
-
                                                         </AlertDialogContent>
                                                     </AlertDialog>
                                                 </div>
@@ -161,7 +163,7 @@ export function BudgetTracker() {
                                         </TableRow>
                                     )) : (
                                         <TableRow>
-                                            <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
+                                            <TableCell colSpan={5} className="h-24 text-center text-muted-foreground text-xs sm:text-sm">
                                                 No transactions yet.
                                             </TableCell>
                                         </TableRow>
@@ -170,17 +172,18 @@ export function BudgetTracker() {
                             </Table>
                         </div>
                         {totalPages > 1 && (
-                            <div className="flex items-center justify-between pt-4">
+                            <div className="flex flex-col sm:flex-row items-center justify-between pt-3 sm:pt-4 gap-2">
                                 <Button
                                     variant="outline"
                                     size="sm"
                                     onClick={() => paginate(currentPage - 1)}
                                     disabled={currentPage === 1}
+                                    className="w-full sm:w-auto"
                                 >
                                     <ChevronLeft className="mr-2 h-4 w-4" />
                                     Previous
                                 </Button>
-                                <div className="text-sm text-muted-foreground">
+                                <div className="text-xs sm:text-sm text-muted-foreground">
                                     Page {currentPage} of {totalPages}
                                 </div>
                                 <Button
@@ -188,6 +191,7 @@ export function BudgetTracker() {
                                     size="sm"
                                     onClick={() => paginate(currentPage + 1)}
                                     disabled={currentPage === totalPages}
+                                    className="w-full sm:w-auto"
                                 >
                                     Next
                                     <ChevronRight className="ml-2 h-4 w-4" />
@@ -197,7 +201,8 @@ export function BudgetTracker() {
                     </CardContent>
                 </Card>
 
-                <Card className="md:col-span-2">
+                {/* Expense Chart */}
+                <Card className="md:col-span-2 mt-4 md:mt-0">
                     <CardHeader>
                         <CardTitle>Expense Breakdown</CardTitle>
                         <CardDescription>A chart showing your expenses by category.</CardDescription>
