@@ -2,7 +2,7 @@ import { Button } from "../../components/ui/button";
 
 export default function AboutMe() {
     return (
-        <div className="pb-14 bg-sidebar">
+        <div className="py-14 bg-sidebar">
             <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between">
 
                 {/* Left Side: Your Picture */}

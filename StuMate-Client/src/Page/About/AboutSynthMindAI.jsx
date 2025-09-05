@@ -1,12 +1,7 @@
 
 const AboutSynthMindAI = () => (
-    <header className="bg-sidebar text-white pt-20">
-        <div className=" px-6 py-16  text-center bg-gradient-to-r from-[#6366f1] to-[#2563eb]">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">About Stumate</h1>
-            <p className="text-xl md:text-2xl max-w-3xl mx-auto opacity-90">
-                Where student life meets smart technology to make learning effortless
-            </p>
-        </div>
+    <header className="bg-sidebar text-white">
+
         {/* Main Content */}
         <main className="max-w-7xl mx-auto px-6 py-16">
             {/* Our Story */}

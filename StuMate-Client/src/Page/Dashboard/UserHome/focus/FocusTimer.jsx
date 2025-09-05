@@ -2,13 +2,13 @@
 
 
 import { isToday } from 'date-fns';
-import { Award, Clock, Pause, Play, RotateCcw, Target } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import notificationSound from '../../../../assets/audio/notification.mp3';
+import { Award, Clock, Pause, Play, RotateCcw, Target, Volume2 } from 'lucide-react';
+import { useMemo } from 'react';
 import { Button } from '../../../../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../../components/ui/card';
 import { Progress } from '../../../../components/ui/progress';
 import { Tabs, TabsList, TabsTrigger } from '../../../../components/ui/tabs';
+import { useFocusContext } from '../../../../context/FocusProvider';
 import { useFocus } from '../../../../hooks/useFocus';
 import { StatCard } from '../dashboard/StatCard';
 
@@ -19,152 +19,16 @@ const SESSION_DURATIONS = {
 };
 
 export function FocusTimer() {
-    const { addFocusSession, sessions } = useFocus();
-    const [sessionType, setSessionType] = useState('pomodoro');
-    const [timeLeft, setTimeLeft] = useState(SESSION_DURATIONS.pomodoro);
-    const [isActive, setIsActive] = useState(false);
-    const [sessionStartTime, setSessionStartTime] = useState(null);
-    const audioRef = useRef(null);
-
-    const handleSessionChange = useCallback((type) => {
-        setIsActive(false);
-        setSessionType(type);
-        setTimeLeft(SESSION_DURATIONS[type]);
-        localStorage.setItem('focusTimerState', JSON.stringify({ type: type, active: false }));
-    }, []);
-
-    // Load state from localStorage on initial render
-    useEffect(() => {
-        try {
-            const savedState = localStorage.getItem('focusTimerState');
-            if (savedState) {
-                const { type, startTime, active, lastSeen } = JSON.parse(savedState);
-
-                if (active && startTime && lastSeen) {
-                    const elapsed = Math.floor((Date.now() - lastSeen) / 1000);
-                    const timeSinceStart = Math.floor((lastSeen - startTime) / 1000);
-                    const remaining = SESSION_DURATIONS[type] - timeSinceStart - elapsed;
-
-                    if (remaining > 0) {
-                        setSessionType(type);
-                        setTimeLeft(remaining);
-                        setIsActive(true);
-                        setSessionStartTime(new Date(startTime));
-                    } else {
-                        // Timer finished while user was away
-                        addFocusSession.mutate({
-                            startTime: new Date(startTime).toISOString(),
-                            endTime: new Date(startTime + SESSION_DURATIONS[type] * 1000).toISOString(),
-                            duration: Math.round(SESSION_DURATIONS[type] / 60),
-                            type: type,
-                        });
-                        localStorage.removeItem('focusTimerState');
-                        handleSessionChange('pomodoro'); // Reset to default
-                    }
-                } else {
-                    handleSessionChange(type || 'pomodoro');
-                }
-            }
-        } catch (error) {
-            console.error("Could not parse focus timer state from localStorage", error);
-            localStorage.removeItem('focusTimerState');
-        }
-    }, [addFocusSession, handleSessionChange]);
-
-
-    useEffect(() => {
-        let interval = null;
-        if (isActive && timeLeft > 0) {
-            interval = setInterval(() => {
-                setTimeLeft((prevTime) => {
-                    const newTime = prevTime - 1;
-                    // Save state on each tick
-                    if (sessionStartTime) {
-                        localStorage.setItem('focusTimerState', JSON.stringify({
-                            type: sessionType,
-                            startTime: sessionStartTime.getTime(),
-                            active: true,
-                            lastSeen: Date.now()
-                        }));
-                    }
-                    return newTime;
-                });
-            }, 1000);
-        } else if (isActive && timeLeft === 0) {
-            setIsActive(false);
-            localStorage.removeItem('focusTimerState');
-
-            if (audioRef.current) {
-                audioRef.current.currentTime = 0;
-                audioRef.current.volume = 1.0;
-                audioRef.current.play().catch(e => console.error("Error playing sound:", e));
-            }
-            if (sessionStartTime) {
-                addFocusSession.mutate({
-                    startTime: sessionStartTime.toISOString(),
-                    endTime: new Date().toISOString(),
-                    duration: Math.round(SESSION_DURATIONS[sessionType] / 60),
-                    type: sessionType,
-                });
-            }
-            if (Notification.permission === 'granted') {
-                new Notification('Session Over!', {
-                    body: `Your ${sessionType.replace('-', ' ')} session has ended.`,
-                });
-            }
-        }
-        return () => {
-            if (interval) clearInterval(interval);
-        };
-    }, [isActive, timeLeft, sessionType, addFocusSession, sessionStartTime]);
-
-    useEffect(() => {
-        if (Notification.permission !== 'granted') {
-            Notification.requestPermission();
-        }
-        // Initialize audio object
-        audioRef.current = new Audio(notificationSound);
-    }, []);
-
-    const toggleTimer = () => {
-        if (!isActive) {
-            const startTime = new Date();
-            setSessionStartTime(startTime);
-            setIsActive(true);
-            localStorage.setItem('focusTimerState', JSON.stringify({
-                type: sessionType,
-                startTime: startTime.getTime(),
-                active: true,
-                lastSeen: Date.now()
-            }));
-
-            // Unlock audio on first interaction
-            if (audioRef.current) {
-                audioRef.current.play().then(() => {
-                    audioRef.current.pause();
-                    audioRef.current.currentTime = 0;
-                }).catch(err => {
-                    console.log("Audio unlock failed:", err);
-                });
-            }
-        } else {
-            setIsActive(false);
-            localStorage.setItem('focusTimerState', JSON.stringify({
-                type: sessionType,
-                startTime: sessionStartTime?.getTime(),
-                active: false,
-                lastSeen: Date.now()
-            }));
-        }
-    };
-
-
-    const resetTimer = () => {
-        setIsActive(false);
-        setTimeLeft(SESSION_DURATIONS[sessionType]);
-        setSessionStartTime(null);
-        localStorage.removeItem('focusTimerState');
-    };
+    const { sessions } = useFocus();
+    const {
+        sessionType,
+        timeLeft,
+        isActive,
+        handleSessionChange,
+        toggleTimer,
+        resetTimer,
+        playNotificationSound
+    } = useFocusContext();
 
     const formatTime = (seconds) => {
         const minutes = Math.floor(seconds / 60);
@@ -181,7 +45,7 @@ export function FocusTimer() {
         const longestStreak = sessions.reduce((max, s, i, arr) => {
             if (s.type === 'pomodoro') {
                 let currentStreak = 1;
-
+                // This is a simplified streak calculation, a more robust one would analyze dates
                 for (let j = i - 1; j >= 0; j--) {
                     if (arr[j].type === 'pomodoro') currentStreak++;
                     else break;
@@ -227,6 +91,9 @@ export function FocusTimer() {
                         </Button>
                         <Button onClick={resetTimer} variant="outline" size="icon">
                             <RotateCcw />
+                        </Button>
+                        <Button onClick={playNotificationSound} variant="outline" size="icon">
+                            <Volume2 />
                         </Button>
                     </div>
                 </CardContent>

@@ -112,7 +112,7 @@ export function SiteHeader() {
           {user && (
             <div className="relative min-w-0" ref={profileRef}>
               <button
-                className="flex items-center gap-2 rounded-full bg-white dark:bg-gray-800 dark:hover:bg-gray-800 w-10 h-10 md:w-48 px-2 md:px-0 min-w-0"
+                className="flex items-center gap-2 rounded-full  w-10 h-10 md:w-48 px-2 md:px-0 min-w-0"
                 onClick={() => setIsProfileOpen((open) => !open)}
                 aria-haspopup="menu"
                 aria-expanded={isProfileOpen}

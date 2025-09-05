@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -31,6 +32,7 @@ const Suggestion = ({ text, onClick }) => (
 export function StudyPathGenerator() {
     const [isPending, startTransition] = useTransition();
     const [roadmapData, setRoadmapData] = useState(null);
+
     const [error, setError] = useState(null);
     const [view, setView] = useState('form'); // 'form', 'loading', 'response', 'roadmap'
     const axiosPublic = useAxiosPublic();
@@ -52,30 +54,18 @@ export function StudyPathGenerator() {
             await new Promise(resolve => setTimeout(resolve, 3000));
 
             try {
-                // --- DEVELOPMENT: Using Mock Data ---
-                const defaultRoadmapData = {
-                    roadmap: [
-                        { day: 1, title: "Foundation & Basics", tasks: ["Review core concepts of algebra.", "Watch introductory videos on calculus.", "Set up your study environment."], tip: "A strong foundation makes complex topics easier to grasp later." },
-                        { day: 2, title: "Limits and Continuity", tasks: ["Define and understand the concept of a limit.", "Practice one-sided and two-sided limits.", "Explore the Intermediate Value Theorem."], tip: "Try explaining the concept of a limit to a friend to test your understanding." },
-                        { day: 3, title: "Derivatives", tasks: ["Learn the power rule, product rule, and quotient rule.", "Practice finding the derivatives of polynomial functions.", "Understand the geometric interpretation of a derivative as the slope of a tangent line."], tip: "Derivatives are a core concept. Spend extra time here if needed." },
-                        { day: 4, title: "Application of Derivatives", tasks: ["Work on related rates problems.", "Find local maxima and minima of functions.", "Understand how derivatives affect the shape of a graph."], tip: "Draw graphs as you work through problems to visualize what's happening." },
-                        { day: 5, title: "Review & Practice", tasks: ["Take a practice quiz covering all topics from this week.", "Review any areas you struggled with.", "Organize your notes for easy access."], tip: "Consistent review is key to long-term retention. Don't skip it!" }
-                    ]
-                };
-                setRoadmapData({ ...defaultRoadmapData, objective: values.objective });
-                setView('response');
 
-                // --- PRODUCTION: Live AI Call ---
-                /*
+
+
                 const response = await axiosPublic.post('/study-path/generate', { ...values, email: user?.email });
                 const res = response.data;
-        
+
                 if (!res || !res.roadmap || res.roadmap.length === 0) {
-                  throw new Error("The AI failed to generate a study path. Please try a different objective.");
+                    throw new Error("The AI failed to generate a study path. Please try a different objective.");
                 }
                 setRoadmapData(res);
                 setView('response');
-                */
+
             } catch (e) {
                 setError(e instanceof Error ? e.message : 'An unknown error occurred.');
                 setView('form');

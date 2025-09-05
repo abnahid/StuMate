@@ -4,6 +4,7 @@ import { AppSidebar } from "../components/app-sidebar";
 import { SiteHeader } from "../components/site-header";
 import { SidebarInset, SidebarProvider } from "../components/ui/sidebar";
 import ThemeContext from "../context/ThemeContext";
+import { GlobalFocusTimer } from "../Page/Dashboard/UserHome/focus/GlobalFocusTimer";
 
 const Dashboard = () => {
   const { isDarkMode } = useContext(ThemeContext);
@@ -23,6 +24,8 @@ const Dashboard = () => {
       <SidebarInset>
         <SiteHeader />
         <main ><Outlet /> </main>
+        <GlobalFocusTimer />
+
       </SidebarInset>
     </SidebarProvider>
   );

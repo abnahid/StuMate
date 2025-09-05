@@ -40,7 +40,7 @@ export default function Hero() {
     const { user } = useAuth();
 
     return (
-        <section className="relative z-10 text-center py-16 sm:py-24 px-4">
+        <section className="relative z-10 text-center py-16 sm:py-24 px-4 ">
             {/* Gradient background ONLY for Hero */}
             <div className="absolute inset-0 -z-10 pointer-events-none">
                 <div
@@ -58,7 +58,7 @@ export default function Hero() {
                     }}
                 />
             </div>
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-4xl mx-auto ">
                 <span className="inline-block px-4 py-1.5 text-xs font-semibold tracking-wider uppercase 
           text-primary 
           bg-BgDashboard
