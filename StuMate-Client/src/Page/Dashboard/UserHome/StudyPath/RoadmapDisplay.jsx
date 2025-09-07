@@ -117,24 +117,54 @@ export function RoadmapDisplay({ roadmapData, onTryAgain }) {
             const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
             const filename = `stumate-study-path-${timestamp}`;
 
-            if (format === 'pdf') {
-                const pdf = new jsPDF('p', 'mm', 'a4');
+            if (format === "pdf") {
+                const pdf = new jsPDF("p", "mm", "a4");
                 const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (input.scrollHeight * pdfWidth) / input.scrollWidth;
-                pdf.addImage(dataUrl, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+
+                // Create an image
+                const img = new Image();
+                img.src = dataUrl;
+                await new Promise((resolve) => {
+                    img.onload = resolve;
+                });
+
+                const imgWidth = pdfWidth;
+                const imgHeight = (img.height * pdfWidth) / img.width;
+
+                let position = 0;
+                let heightLeft = imgHeight;
+
+                while (heightLeft > 0) {
+                    pdf.addImage(
+                        img,
+                        "PNG",
+                        0,
+                        position,
+                        imgWidth,
+                        imgHeight
+                    );
+                    heightLeft -= pdfHeight;
+                    if (heightLeft > 0) {
+                        pdf.addPage();
+                        position = - (imgHeight - heightLeft); // shift up for next slice
+                    }
+                }
+
                 pdf.save(`${filename}.pdf`);
             } else {
-                const link = document.createElement('a');
+                const link = document.createElement("a");
                 link.href = dataUrl;
                 link.download = `${filename}.png`;
                 link.click();
             }
         } catch (error) {
-            console.error('Export failed:', error);
+            console.error("Export failed:", error);
         } finally {
             setIsExporting(false);
         }
     };
+
 
 
     return (

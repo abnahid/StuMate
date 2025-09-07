@@ -1,9 +1,8 @@
 import {
   IconCurrencyDollar,
-  IconHelp,
   IconSettings
 } from "@tabler/icons-react";
-import { Book, BookOpen, Calendar, ListTodo, Route, Timer, Trophy, Users, } from "lucide-react";
+import { Book, BookOpen, Calendar, ListTodo, Route, Timer, Trophy, Users, Video, } from "lucide-react";
 import { RxDashboard } from "react-icons/rx";
 import { Link, useLocation } from "react-router-dom";
 import { NavMain } from "./nav-main";
@@ -25,9 +24,10 @@ const navMain = [
   { title: 'Achievements', url: '/dashboard/achievements', icon: Trophy, id: 'tour-achievements' },
 ];
 const navSecondary = [
+  { title: 'Practice Room', url: '/dashboard/practice-room', icon: Video },
   { title: 'Community', url: '/dashboard/community', icon: Users, id: 'tour-community' },
   { title: "Settings", url: "/dashboard/settings", icon: IconSettings, id: 'tour-settings' },
-  { title: "Get Help", url: "/dashboard/help", icon: IconHelp, id: 'tour-help' },
+  // { title: "Get Help", url: "/dashboard/help", icon: IconHelp, id: 'tour-help' },
 
 ];
 

@@ -33,6 +33,8 @@ import { FocusTimer } from "../Page/Dashboard/UserHome/focus/FocusTimer";
 import { HelpPage } from "../Page/Dashboard/UserHome/HelpPage";
 import { StudyJournal } from "../Page/Dashboard/UserHome/journal/StudyJournal";
 import { PlannerBoard } from "../Page/Dashboard/UserHome/planner/PlannerBoard";
+import { PracticeRoomPage } from "../Page/Dashboard/UserHome/practiceRoom/PracticeRoomPage";
+import { RoomDetailsPage } from "../Page/Dashboard/UserHome/practiceRoom/RoomDetailsPag";
 import { ScheduleView } from "../Page/Dashboard/UserHome/schedule/ScheduleView";
 import { StudyPathGenerator } from "../Page/Dashboard/UserHome/StudyPath/StudyPathGenerator";
 import HeroHome from "../Page/Home/HeroHome";
@@ -74,12 +76,13 @@ const router = createBrowserRouter([
             { path: "help", element: <HelpPage /> },
             { path: "community", element: <CommunityPage /> },
             { path: "community/post/:postId", element: <PostView /> },
-            { path: "study-path", element: <StudyPathGenerator /> }, // Study Path Coming Soon
+            { path: "study-path", element: <StudyPathGenerator /> },
 
+            { path: "practice-room", element: <PracticeRoomPage /> },
+            { path: "practice-room/:roomCode", element: <RoomDetailsPage /> },
 
             { path: "achievements", element: <AchievementPage /> },
 
-            // Settings (for both user/admin)
             {
                 path: "settings",
                 element: <SettingsLayout />,

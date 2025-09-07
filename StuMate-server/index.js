@@ -3,13 +3,13 @@ import dotenv from "dotenv";
 import express from "express";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
-
 dotenv.config();
-
-import questionsRoutes from "./routes/questions.js"; // note the .js extension
 
 import { MongoClient, ObjectId, ServerApiVersion } from "mongodb";
 import { studyPathGenerator } from "./genkit.js";
+import questionsRoutes from "./routes/questions.js";
+
+
 
 const app = express();
 const port = process.env.PORT || 5012;
@@ -18,9 +18,10 @@ const port = process.env.PORT || 5012;
 // Middleware
 app.use(
   cors({
+    // origin: ["https://stumate.netlify.app", "http://localhost:5173"],
     origin: "*",
     credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 app.use(express.json());
@@ -85,6 +86,7 @@ async function run() {
     const journalsCollection = db.collection("journals");
     const postsCollection = db.collection("posts");
     const commentsCollection = db.collection("comments");
+    const practiceRoomsCollection = db.collection("practiceRooms");
 
 
     app.get("/api", (req, res) => {
@@ -400,6 +402,67 @@ async function run() {
         res.status(500).send({ message: "Failed to generate study path." });
       }
     });
+
+
+    app.post("/api/practice-room", async (req, res) => {
+      try {
+        const { hostEmail, hostName, hostPhotoURL, meetLink } = req.body;
+        if (!hostEmail || !meetLink) {
+          return res.status(400).send({ message: "Host email and Meet link are required." });
+        }
+
+        const newRoom = {
+          code: Math.random().toString(36).substring(2, 8).toUpperCase(),
+          meetLink,
+          hostEmail,
+          hostName,
+          hostPhotoURL,
+          createdAt: new Date(),
+          expiresAt: new Date(Date.now() + 60 * 60 * 1000), // Expires in 1 hour
+        };
+
+        const result = await practiceRoomsCollection.insertOne(newRoom);
+
+        // Optional: Schedule a task to delete the room after it expires
+        setTimeout(async () => {
+          try {
+            await practiceRoomsCollection.deleteOne({ _id: result.insertedId });
+            console.log(`🧹 Expired room ${newRoom.code} deleted.`);
+          } catch (e) {
+            console.error(`Error deleting expired room ${newRoom.code}:`, e);
+          }
+        }, 60 * 60 * 1000 + 1000); // Add a small buffer
+
+        res.status(201).send(newRoom);
+      } catch (error) {
+        console.error("❌ Error creating practice room:", error);
+        res.status(500).send({ message: "Failed to create practice room" });
+      }
+    });
+
+
+    app.get("/api/practice-room/:code", async (req, res) => {
+      const { code } = req.params;
+      const room = await practiceRoomsCollection.findOne({ code: code.toUpperCase() });
+      if (!room || room.expiresAt < new Date()) {
+        if (room) {
+          await practiceRoomsCollection.deleteOne({ _id: room._id });
+        }
+        return res.status(404).send({ message: "Room not found or has expired." });
+      }
+      res.send(room);
+    });
+
+
+    // const preCreatedLinks = [
+    //   "meet.google.com/jcz-jqik-mnk",
+
+    // ];
+
+    // preCreatedLinks.forEach(link => {
+    //   practiceRoomsCollection.insertOne({ meetLink: link, status: "available" });
+    // });
+
 
   } catch (e) {
     console.error(e);

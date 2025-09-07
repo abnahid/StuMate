@@ -6,17 +6,17 @@ export const ThemeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-
     const storedTheme = localStorage.getItem("theme");
 
     if (storedTheme) {
+      // Use saved theme
       setIsDarkMode(storedTheme === "dark");
       document.documentElement.classList.toggle("dark", storedTheme === "dark");
     } else {
-
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      setIsDarkMode(prefersDark);
-      document.documentElement.classList.toggle("dark", prefersDark);
+      // 👇 Force light as default (ignore system preference)
+      setIsDarkMode(false);
+      localStorage.setItem("theme", "light");
+      document.documentElement.classList.remove("dark");
     }
   }, []);
 
@@ -24,9 +24,7 @@ export const ThemeProvider = ({ children }) => {
     setIsDarkMode((prevMode) => {
       const newMode = !prevMode;
       localStorage.setItem("theme", newMode ? "dark" : "light");
-
       document.documentElement.classList.toggle("dark", newMode);
-
       return newMode;
     });
   };

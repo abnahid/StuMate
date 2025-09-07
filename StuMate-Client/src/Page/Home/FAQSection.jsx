@@ -50,10 +50,10 @@ export default function FAQSection() {
             <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
                 <div className="max-w-2xl mx-auto text-center">
 
-                    <h2 className="text-3xl font-bold leading-tight text-black sm:text-4xl lg:text-5xl">
+                    <h2 className="text-3xl font-bold leading-tight text-gray-900 dark:text-white sm:text-4xl lg:text-5xl">
                         Frequently Asked Questions
                     </h2>
-                    <p className="max-w-xl mx-auto mt-4 text-base leading-relaxed text-gray-600">
+                    <p className="max-w-xl mx-auto mt-4 text-base leading-relaxed text-gray-600 dark:text-gray-400">
                         Answers to the most common questions about how to use the app.
                     </p>
                 </div>
@@ -62,14 +62,14 @@ export default function FAQSection() {
                     {faqs.map((faq, index) => (
                         <div
                             key={index}
-                            className="rounded-xl transition-all duration-200 bg-white border border-gray-200 shadow cursor-pointer hover:bg-gray-50"
+                            className="rounded-xl  border border-border hover:border-primary-500 transition-all duration-300 hover:shadow-glow overflow-hidden bg-background"
                         >
                             <button
                                 type="button"
                                 onClick={() => toggleFAQ(index)}
                                 className="flex items-center justify-between w-full px-4 py-5 sm:p-6"
                             >
-                                <span className="flex text-lg font-semibold text-black">
+                                <span className="flex text-lg font-semibold text-gray-900 dark:text-white">
                                     {faq.question}
                                 </span>
 
@@ -91,10 +91,10 @@ export default function FAQSection() {
                             </button>
 
                             <div
-                                className={`px-4 pb-5 sm:px-6 sm:pb-6 transition-all duration-300 ${openIndex === index ? "block" : "hidden"
+                                className={`px-4 pb-5 sm:px-6 sm:pb-6  transition-all duration-300 ${openIndex === index ? "block" : "hidden"
                                     }`}
                             >
-                                <p className="text-gray-600">{faq.answer}</p>
+                                <p className="text-gray-400">{faq.answer}</p>
                             </div>
                         </div>
                     ))}

@@ -1,7 +1,7 @@
 
 export default function AboutSection() {
     return (
-        <section className="relative z-10 text-center py-12 sm:py-20 px-4 sm:px-6 lg:px-8">
+        <section className="relative z-10 text-center  py-12 sm:py-20 px-4 sm:px-6 lg:px-8">
             {/* Background Gradients */}
             <div className="absolute inset-0 -z-10 pointer-events-none">
                 <div

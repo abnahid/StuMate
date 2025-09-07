@@ -19,7 +19,7 @@ Your central hub for a complete overview of your academic life at a glance.
 - **Quick Access:** See your upcoming tasks and recent transactions without navigating away from the dashboard.
 - **Motivational Boost:** Get a daily dose of inspiration with a motivational quote card to keep you going.
 
-![Dashboard](https://i.ibb.co.com/23HdxrwT/dashboard.webp)
+![Dashboard](https://i.ibb.co.com/CKg2nggK/dashboard-1.webp)
 
 ### 2. 📅 Class Schedule Tracker
 
@@ -28,7 +28,7 @@ Never miss a lecture or an important event again! The schedule tracker provides 
 - **Multiple Views:** Seamlessly switch between month, week, and day views to see your schedule at any level of detail.
 - **Easy Management:** Quickly add, edit, and delete class entries with an intuitive form.
 - **Color Coding:** Assign unique colors to different subjects for at-a-glance clarity and better organization.
-- **Responsive Design:** The calendar is fully responsive, providing a great experience on both desktop and mobile devices.
+- **Smart Notifications:** A notification bell in the header provides an at-a-glance view of all your events scheduled in the next 7 days, complete with a countdown.
 
 ![Schedule View](https://i.ibb.co.com/dwBghxgR/schedule.webp)
 
@@ -70,7 +70,7 @@ Supercharge your study sessions with an AI-driven exam question generator. Inste
 
 What makes Stumate stand out? We've added creative, AI-powered, and user-centric features to provide a truly enhanced experience.
 
-### ⭐ Unique Feature 1: Persistent Focus Mode
+### ⭐ 1: Persistent Focus Mode
 
 Improve your concentration and productivity with a built-in Pomodoro timer designed for a seamless study experience.
 
@@ -80,7 +80,18 @@ Improve your concentration and productivity with a built-in Pomodoro timer desig
 
 ![Focus Mode](https://i.ibb.co.com/fZsVnJX/focus-mood.webp)
 
-### 2. 📖 Study Journal
+### 5. AI Study Path Generator
+
+Don't know where to start? The AI Study Path Generator turns your big goals into a manageable, day-by-day plan.
+
+- **Define Your Goal:** Simply tell the AI what you want to learn—from "Master calculus in 2 weeks" to "Learn the basics of Python for data analysis."
+- **Get a Custom Roadmap:** The AI generates a detailed, step-by-step study plan, broken down into daily tasks and milestones.
+- **Visual Timeline:** The plan is presented in a beautiful, easy-to-follow timeline that visualizes your entire learning journey.
+- **Export Your Plan:** Save your study path as a PDF or image to keep it handy or share it with others.
+
+![AI Study Path](https://i.ibb.co.com/WvMqbMW7/Stu-Mate-1-mp4-2.gif)
+
+### 3. 📖 Study Journal
 
 Reflect on your study sessions to better understand your learning process and improve your habits.
 
@@ -90,7 +101,7 @@ Reflect on your study sessions to better understand your learning process and im
 
 ![Study Journal](https://i.ibb.co.com/nNw07Ghb/journal.webp)
 
-### 3. 🏆 Achievements & Gamification
+### 4. 🏆 Achievements & Gamification
 
 Stay motivated by unlocking badges and tracking your progress through a fun and engaging achievement system.
 
@@ -100,7 +111,18 @@ Stay motivated by unlocking badges and tracking your progress through a fun and 
 
 ![Achievements](https://i.ibb.co.com/j90gXPTY/achievement.webp)
 
-### 4. 💬 Community Forum
+### 5. 🤝 One-on-One Practice Rooms
+
+Facilitate collaborative study sessions with a friend, no matter where they are.
+
+- **Seamless Integration with Google Meet:** Create a private study room powered by Google Meet without leaving the app.
+- **Simple Room Creation:** Generate a new Google Meet link and paste it into the app to create a new room.
+- **Easy Sharing:** The app generates a unique, short code for your room that you can easily share with a study partner.
+- **Branded Joining Page:** Your friend will see a beautiful, branded page with your profile picture and a clear "Join Now" button, making the experience feel integrated and professional.
+
+![Practice Room](https://i.ibb.co.com/Q3cP96P4/room.webp)
+
+### 6. 💬 Community Forum
 
 Connect with fellow students, ask questions, and share resources in a collaborative forum.
 
@@ -110,7 +132,7 @@ Connect with fellow students, ask questions, and share resources in a collaborat
 
 ![Community Forum](https://i.ibb.co.com/DHFNDnvm/community-form.webp)
 
-### 5. 👤 Profile Settings
+### 7. 👤 Profile Settings
 
 Easily manage your personal information, profile photo, and password to keep your account up to date.
 
@@ -126,7 +148,7 @@ Easily manage your personal information, profile photo, and password to keep you
 ## 🛠️ Tech Stack
 
 - **Frontend:** React, Tailwind CSS
-- **UI Components:** shadcn/ui, Recharts
+- **UI Components:** shadcn/ui, Recharts, Motion
 - **State Management:** TanStack Query (React Query)
 - **Backend:** Node.js, Express.js
 - **Database:** MongoDB
